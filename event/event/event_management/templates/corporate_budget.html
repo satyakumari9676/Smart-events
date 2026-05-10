@@ -1,0 +1,1054 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>corporate Budget Estimator & Booking</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --brand:#b76e79;
+      --brand-dark:#8f4f59;
+      --bg:#fff8f6;
+      --card:#ffffff;
+      --ink:#2f2430;
+      --muted:#7b6c74;
+      --ring: rgba(183,110,121,.18);
+      --success:#198754;
+      --soft:#fdf1f3;
+    }
+
+    body{
+      min-height:100vh;
+      background:
+        linear-gradient(rgba(255,248,246,.88), rgba(255,248,246,.93)),
+        url("{% static 'corp.jpg' %}");
+      background-size:cover;
+      background-position:center;
+      background-attachment:fixed;
+      color:var(--ink);
+      font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    .top-wrap{ padding:28px 0 40px; }
+
+    .glass{
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(183,110,121,.14);
+      backdrop-filter: blur(10px);
+      border-radius: 22px;
+      box-shadow: 0 16px 40px rgba(79,54,63,.12);
+    }
+
+    .soft-card{
+      background: rgba(255,255,255,.98);
+      border: 1px solid rgba(47,36,48,.08);
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(47,36,48,.08);
+    }
+
+    .muted{ color: var(--muted); }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      padding:.42rem .85rem;
+      border-radius:999px;
+      border:1px solid rgba(183,110,121,.18);
+      background:rgba(183,110,121,.08);
+      color:var(--brand-dark);
+      font-size:.92rem;
+      font-weight:600;
+    }
+
+    .pkg-card{
+      border-radius:18px;
+      border:1px solid rgba(183,110,121,.18);
+      background:#fff;
+      cursor:pointer;
+      transition:.2s ease;
+      padding:16px;
+      height:100%;
+    }
+
+    .pkg-card:hover{
+      transform:translateY(-2px);
+      box-shadow:0 12px 24px rgba(47,36,48,.08);
+    }
+
+    .pkg-card.active{
+      border-color:rgba(183,110,121,.65);
+      box-shadow:0 0 0 6px var(--ring);
+      background:#fffaf9;
+    }
+
+    .service-box{
+      border:1px solid rgba(47,36,48,.10);
+      border-radius:16px;
+      padding:14px;
+      background:#fff;
+      height:100%;
+      transition:.2s ease;
+    }
+
+    .service-box:hover{
+      transform:translateY(-2px);
+      box-shadow:0 10px 22px rgba(47,36,48,.07);
+    }
+
+    .sticky-side{
+      position:sticky;
+      top:18px;
+    }
+
+    .theme-card{
+      border:2px solid rgba(47,36,48,.08);
+      border-radius:18px;
+      overflow:hidden;
+      background:#fff;
+      cursor:pointer;
+      transition:.2s ease;
+      height:100%;
+    }
+
+    .theme-card:hover{
+      transform:translateY(-3px);
+      box-shadow:0 14px 28px rgba(47,36,48,.10);
+    }
+
+    .theme-card.selected{
+      border-color:var(--brand);
+      box-shadow:0 0 0 6px var(--ring);
+    }
+
+    .theme-card img{
+      width:100%;
+      height:220px;
+      object-fit:cover;
+      display:block;
+    }
+
+    .theme-body{ padding:14px; }
+
+    .selected-mark{
+      color:var(--success);
+      font-weight:700;
+      font-size:.92rem;
+    }
+
+    .summary-price{
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+
+    .payment-box{
+      background:#fcfcfc;
+      border:1px solid #eadde1;
+      border-radius:16px;
+      padding:16px;
+    }
+
+    .success-box{
+      background:#ecfdf3;
+      border:1px solid #a7f3d0;
+      color:#065f46;
+      border-radius:14px;
+      padding:12px 14px;
+      font-weight:600;
+    }
+
+    .section-title{
+      color:var(--brand-dark);
+      font-weight:800;
+    }
+
+    .btn-primary{
+      background:var(--brand);
+      border-color:var(--brand);
+    }
+
+    .btn-primary:hover{
+      background:var(--brand-dark);
+      border-color:var(--brand-dark);
+    }
+
+    .form-check-input:checked{
+      background-color:var(--brand);
+      border-color:var(--brand);
+    }
+
+    .table thead th{
+      color:var(--muted);
+      font-size:.9rem;
+    }
+
+    #decorationSection{
+      display:none;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-wrap">
+    <div class="container">
+
+      <div class="glass p-4 p-lg-5 mb-4">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-8">
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <span class="chip">corporate Budget</span>
+              <span class="chip">Service Selection</span>
+              <span class="chip">Decoration Themes</span>
+              <span class="chip">Event Booking</span>
+            </div>
+
+            <h1 class="display-5 fw-bold mb-2">corporate Budget Estimator & Booking</h1>
+            <p class="mb-0 muted">
+              corporate services select chesthe amount add avutundi. Decoration service select chesthe matrame decoration themes display avutayi. Final ga card details tho booking complete cheyyachu.
+            </p>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="soft-card p-3">
+              <div class="small muted">Currency</div>
+              <div class="h4 fw-bold mb-0">₹ INR</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-lg-8">
+
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <h4 class="section-title mb-3">Customer Details</h4>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">customer </label>
+                <input type="text" class="form-control" id="custName" placeholder="Enter customer name">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Phone Number</label>
+                <input type="text" class="form-control" id="custPhone" placeholder="Enter phone number">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">corporate Date</label>
+                <input type="date" class="form-control" id="eventDate">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">corporate Time</label>
+                <input type="time" class="form-control" id="eventTime">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Venue / Address</label>
+                <textarea class="form-control" id="venueAddress" rows="2" placeholder="Enter event address"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <h4 class="section-title mb-1">Select corporate Package</h4>
+                <div class="muted">Simple, Classic, Royal package batti service prices and decoration prices marutayi.</div>
+              </div>
+              <div class="muted">Selected Package: <span class="fw-bold" id="pkgText">Simple</span></div>
+            </div>
+
+            <div class="row g-3 mt-2">
+              <div class="col-md-4">
+                <div class="pkg-card active" data-pkg="simple" onclick="selectPackage('simple')">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <div class="fw-bold">Simple</div>
+                      <div class="small muted mt-1">Budget friendly corporate package</div>
+                    </div>
+                    <input class="form-check-input" type="radio" name="pkg" checked>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="pkg-card" data-pkg="classic" onclick="selectPackage('classic')">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <div class="fw-bold">Classic</div>
+                      <div class="small muted mt-1">Balanced and elegant package</div>
+                    </div>
+                    <input class="form-check-input" type="radio" name="pkg">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="pkg-card" data-pkg="royal" onclick="selectPackage('royal')">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <div class="fw-bold">Royal</div>
+                      <div class="small muted mt-1">Premium grand corporate package</div>
+                    </div>
+                    <input class="form-check-input" type="radio" name="pkg">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <h4 class="section-title mb-1">Guests & Location</h4>
+            <div class="muted mb-3">Guest count per plate items ni affect chestundi. Location final budget ni multiply chestundi.</div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Expected Guests</label>
+                <input type="number" class="form-control" id="guests" value="300" min="50" max="5000" oninput="recalculate()">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Location Type</label>
+                <select class="form-select" id="location" onchange="recalculate()">
+                  <option value="town" selected>Town</option>
+                  <option value="city">City</option>
+                  <option value="village">Village</option>
+                  <option value="premium">Premium City Zone</option>
+                </select>
+                <div class="small muted mt-1">Location Multiplier: <span class="fw-semibold" id="locMultText">1.00x</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <h4 class="section-title mb-1">Select corporate Services</h4>
+                <div class="muted">Services select chesthe amount automatic ga add avutundi.</div>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="selectAll(true)">Select All</button>
+                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="selectAll(false)">Clear</button>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row g-3" id="servicesArea"></div>
+          </div>
+
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <h4 class="section-title mb-1">Select Catering Menu</h4>
+                <div class="muted">Per plate items guest count batti calculate avutayi.</div>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="selectAllFood(true)">Select All</button>
+                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="selectAllFood(false)">Clear</button>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row g-3" id="foodArea"></div>
+          </div>
+
+          <!-- Decoration Themes -->
+          <div class="soft-card p-3 p-lg-4 mb-4" id="decorationSection">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <h4 class="section-title mb-1">Choose Decoration Theme</h4>
+                <div class="muted">Decoration service select chesthe matrame ee themes kanipistayi.</div>
+              </div>
+              <div class="text-end">
+                <span class="badge text-bg-primary-subtle" id="galleryLabel">Simple</span>
+                <div class="small muted mt-2">Selected Theme: <span class="fw-semibold" id="selectedThemeText">None</span></div>
+              </div>
+            </div>
+
+            <div class="mt-3 mb-2">
+              <button class="btn btn-outline-secondary btn-sm" type="button" onclick="clearTheme()">Clear Theme</button>
+            </div>
+
+            <div class="row g-3" id="galleryArea"></div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="soft-card p-3 p-lg-4 sticky-side">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="small fw-semibold muted">Totals</div>
+              <span class="badge text-bg-primary-subtle" id="selCount">0 Selected</span>
+            </div>
+
+            <div class="mt-3">
+              <div class="muted small">Estimated Total</div>
+              <div class="display-6 summary-price mb-0" id="totalText">₹0</div>
+              <div class="muted small" id="totalHint">Select services to estimate budget</div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="muted small fw-semibold">Decoration Cost</div>
+              <div class="fw-bold" id="themeCostText">₹0</div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <div class="muted small fw-semibold">Food Cost</div>
+              <div class="fw-bold" id="foodCostText">₹0</div>
+            </div>
+
+            <hr>
+
+            <div class="muted small fw-semibold mb-2">Breakdown</div>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th class="text-end">Cost</th>
+                  </tr>
+                </thead>
+                <tbody id="breakdownBody">
+                  <tr><td class="muted small" colspan="2">No items selected.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <hr>
+
+            <button class="btn btn-primary w-100" type="button" onclick="openSummary()">View Summary</button>
+            <button class="btn btn-outline-dark w-100 mt-2" type="button" onclick="resetAll()">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Modal -->
+  <div class="modal fade" id="sumModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="border-radius:20px;">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">corporate Booking Summary</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-5">
+              <div class="soft-card p-3">
+                <div class="muted small">Customer Name</div>
+                <div class="fw-bold" id="sumName"></div>
+
+                <div class="muted small mt-2">Phone</div>
+                <div class="fw-bold" id="sumPhone"></div>
+
+                <div class="muted small mt-2">Date</div>
+                <div class="fw-bold" id="sumDate"></div>
+
+                <div class="muted small mt-2">Time</div>
+                <div class="fw-bold" id="sumTime"></div>
+
+                <div class="muted small mt-2">Venue</div>
+                <div class="fw-bold" id="sumVenue"></div>
+
+                <div class="muted small mt-2">Package</div>
+                <div class="fw-bold" id="sumPkg"></div>
+
+                <div class="muted small mt-2">Guests</div>
+                <div class="fw-bold" id="sumGuests"></div>
+
+                <div class="muted small mt-2">Location</div>
+                <div class="fw-bold" id="sumLoc"></div>
+
+                <div class="muted small mt-2">Decoration Theme</div>
+                <div class="fw-bold" id="sumTheme"></div>
+
+                <div class="muted small mt-2">Total Amount</div>
+                <div class="fw-bold h5 mb-0" id="sumRuleTotal"></div>
+              </div>
+            </div>
+
+            <div class="col-md-7">
+              <div class="soft-card p-3">
+                <div class="muted small fw-semibold mb-2">Selected Items</div>
+                <ul class="mb-3" id="sumItems"></ul>
+
+                <div class="payment-box">
+                  <h6 class="fw-bold mb-3">Payment Details</h6>
+
+                  <div class="mb-3">
+                    <label class="form-label fw-semibold">Card Holder Name</label>
+                    <input type="text" class="form-control" id="cardHolder" placeholder="Enter card holder name">
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label fw-semibold">Card Number</label>
+                    <input type="text" class="form-control" id="cardNumber" maxlength="16" placeholder="Enter 16 digit card number">
+                  </div>
+
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold">Expiry</label>
+                      <input type="text" class="form-control" id="cardExpiry" maxlength="5" placeholder="MM/YY">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold">CVV</label>
+                      <input type="password" class="form-control" id="cardCvv" maxlength="3" placeholder="CVV">
+                    </div>
+                  </div>
+
+                  <button class="btn btn-success w-100 mt-3" type="button" onclick="bookEvent()">Confirm & Book Event</button>
+
+                  <div id="bookingMsg" class="mt-3"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+  function confirmBooking(){ _apiBookEvent(); }
+  function bookEvent(){ _apiBookEvent(); }
+  
+  function _apiBookEvent() {
+      const _guests = parseInt(document.getElementById("guests")?.value || document.getElementById("guestCount")?.value || "50");
+      const _totalText = document.getElementById("sumRuleTotal")?.textContent || document.getElementById("grandTotal")?.textContent || "0";
+      const _total = parseInt(_totalText.replace(/\D/g, '')) || 0;
+      const _eventDate = document.getElementById("eventDate")?.value || new Date().toISOString().split('T')[0];
+      const _custName = document.getElementById("custName")?.value || "Customer";
+      
+      fetch('/api/create-budget-booking/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+              event_name: document.title.split(' ')[0] + ' Event For ' + _custName,
+              event_date: _eventDate,
+              guest_count: _guests,
+              budget_estimate: _total
+          })
+      }).then(r => r.json()).then(d => {
+          if(d.success) {
+              window.location.href = '/checkout/' + d.booking_id + '/';
+          } else {
+              alert("Error: " + d.error);
+          }
+      });
+  }
+
+    const SERVICES = [
+      { id:'hall', name:'Conference/Banquet Hall Booking', type:'fixed', prices:{ simple:60000, classic:100000, royal:180000 }, icon:'🏛️' },
+      { id:'decor', name:'Decoration & Branding', type:'fixed', prices:{ simple:0, classic:0, royal:0 }, icon:'🏢' },
+      { id:'stage', name:'Main Stage Setup', type:'fixed', prices:{ simple:25000, classic:45000, royal:80000 }, icon:'🎤' },
+      { id:'photography', name:'Corporate Photography', type:'fixed', prices:{ simple:30000, classic:50000, royal:90000 }, icon:'📸' },
+      { id:'videography', name:'Event Videography', type:'fixed', prices:{ simple:35000, classic:60000, royal:110000 }, icon:'🎥' },
+      { id:'av_tech', name:'AV & Screen Display', type:'fixed', prices:{ simple:15000, classic:30000, royal:55000 }, icon:'💻' },
+      { id:'mc_host', name:'Event MC / Host', type:'fixed', prices:{ simple:10000, classic:18000, royal:30000 }, icon:'🎙️' },
+      { id:'music', name:'PA System & Audio', type:'fixed', prices:{ simple:18000, classic:30000, royal:50000 }, icon:'🔈' },
+      { id:'welcome', name:'Registration Desk & Usher', type:'fixed', prices:{ simple:12000, classic:20000, royal:40000 }, icon:'🪧' },
+      
+      { id:'security', name:'Security & Management', type:'fixed', prices:{ simple:7000, classic:12000, royal:20000 }, icon:'👮' },
+      
+      { id:'seating', name:'Guest Seating Arrangement', type:'fixed', prices:{ simple:15000, classic:28000, royal:45000 }, icon:'🪑' }
+    ];
+
+    const FOODS = [
+      { id:'welcomeDrink', name:'Welcome Drink', type:'perGuest', prices:{ simple:20, classic:35, royal:60 }, icon:'🥤' },
+      { id:'breakfast', name:'Breakfast', type:'perGuest', prices:{ simple:120, classic:180, royal:280 }, icon:'🍽️' },
+      { id:'lunch', name:'Lunch / Dinner', type:'perGuest', prices:{ simple:250, classic:400, royal:700 }, icon:'🍛' },
+      { id:'sweets', name:'Sweets Counter', type:'perGuest', prices:{ simple:40, classic:70, royal:120 }, icon:'🍨' },
+      { id:'liveCounter', name:'Live Counter', type:'perGuest', prices:{ simple:60, classic:120, royal:220 }, icon:'🔥' }
+    ];
+
+    const PACKAGES = {
+      simple: { label:'Simple' },
+      classic: { label:'Classic' },
+      royal: { label:'Royal' }
+    };
+
+    const LOCATION_MULT = {
+      town: 1.00,
+      city: 1.10,
+      village: 0.90,
+      premium: 1.20
+    };
+
+    const THEMES = {
+      simple: [
+        { id:'simple1', name:'Simple Corporate Panel', desc:'Budget corporate stage with simple paneling.', price:22000, image:"{% static 'scorp1.jpg' %}" },
+        { id:'simple2', name:'Simple Branding Theme', desc:'Clean backdrop with company logo placeholder.', price:26000, image:"{% static 'scorp2.jpg' %}" },
+        { id:'simple3', name:'Simple Executive Decor', desc:'Minimal corporate decor for small meetings.', price:30000, image:"{% static 'scorp3.jpg' %}" }
+      ],
+      classic: [
+        { id:'classic1', name:'Classic LED Setup', desc:'Standard LED screen with stage lights.', price:45000, image:"{% static 'bcorp1.jpg' %}" },
+        { id:'classic2', name:'Classic Podium Stage', desc:'Balanced premium stage with smart podium.', price:52000, image:"{% static 'bcorp2.jpg' %}" },
+        { id:'classic3', name:'Classic Truss Touch', desc:'Professional truss lighting and stage wrap.', price:58000, image:"{% static 'bcorp3.jpg' %}" }
+      ],
+      royal: [
+        { id:'royal1', name:'Grand 3D Stage set', desc:'Luxurious corporate stage with 3D elements.', price:85000, image:"{% static 'lcorp1.jpg' %}" },
+        { id:'royal2', name:'Royal Conference Theme', desc:'Grand corporate entrance and premium setup.', price:95000, image:"{% static 'lcorp2.jpg' %}" },
+        { id:'royal3', name:'Premium Keynote Decor', desc:'High-end stage with wide LED backwall.', price:110000, image:"{% static 'lcorp3.jpg' %}" }
+      ]
+    };
+
+    let selectedPkg = "simple";
+    const selectedServices = new Set();
+    const selectedFoods = new Set();
+    let selectedThemeId = null;
+
+    function formatINR(n){
+      return "₹" + Math.round(n).toLocaleString("en-IN");
+    }
+
+    function getPackagePrice(item){
+      return item.prices[selectedPkg];
+    }
+
+    function getCurrentThemes(){
+      return THEMES[selectedPkg] || [];
+    }
+
+    function getSelectedTheme(){
+      return getCurrentThemes().find(t => t.id === selectedThemeId) || null;
+    }
+
+    function renderServices(){
+      const area = document.getElementById("servicesArea");
+      area.innerHTML = "";
+
+      SERVICES.forEach(item => {
+        const price = getPackagePrice(item);
+        const col = document.createElement("div");
+        col.className = "col-md-6";
+
+        let baseText = "";
+        if(item.id === "decor"){
+          baseText = "Select this service to view decoration themes";
+        } else {
+          baseText = item.type === "perGuest"
+            ? `Base Price: ${formatINR(price)} / guest`
+            : `Base Price: ${formatINR(price)}`;
+        }
+
+        col.innerHTML = `
+          <div class="service-box">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+              <div>
+                <div class="fw-bold">${item.icon} ${item.name}</div>
+                <div class="muted small mt-1">${baseText}</div>
+                <div class="muted small mt-1">
+                  Selected Cost: <span class="fw-semibold" id="service-cost-${item.id}">—</span>
+                </div>
+              </div>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="service-${item.id}" onchange="toggleService('${item.id}', this.checked)">
+              </div>
+            </div>
+          </div>
+        `;
+        area.appendChild(col);
+      });
+    }
+
+    function renderFoods(){
+      const area = document.getElementById("foodArea");
+      area.innerHTML = "";
+
+      FOODS.forEach(item => {
+        const price = getPackagePrice(item);
+        const col = document.createElement("div");
+        col.className = "col-md-6";
+
+        col.innerHTML = `
+          <div class="service-box">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+              <div>
+                <div class="fw-bold">${item.icon} ${item.name}</div>
+                <div class="muted small mt-1">
+                  ${item.type === "perGuest" ? `Base Price: ${formatINR(price)} / guest` : `Base Price: ${formatINR(price)}`}
+                </div>
+                <div class="muted small mt-1">
+                  Selected Cost: <span class="fw-semibold" id="food-cost-${item.id}">—</span>
+                </div>
+              </div>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="food-${item.id}" onchange="toggleFood('${item.id}', this.checked)">
+              </div>
+            </div>
+          </div>
+        `;
+        area.appendChild(col);
+      });
+    }
+
+    function renderGallery(){
+      const area = document.getElementById("galleryArea");
+      area.innerHTML = "";
+
+      const themes = getCurrentThemes();
+      const currentExists = themes.some(t => t.id === selectedThemeId);
+      if(!currentExists) selectedThemeId = null;
+
+      themes.forEach(theme => {
+        const selected = selectedThemeId === theme.id;
+        const col = document.createElement("div");
+        col.className = "col-md-6";
+
+        col.innerHTML = `
+          <div class="theme-card ${selected ? 'selected' : ''}" onclick="selectTheme('${theme.id}')">
+            <img src="${theme.image}" alt="${theme.name}">
+            <div class="theme-body">
+              <div class="d-flex justify-content-between align-items-start gap-2">
+                <div>
+                  <div class="fw-bold">${theme.name}</div>
+                  <div class="muted small mt-1">${theme.desc}</div>
+                </div>
+                <span class="badge text-bg-light">${PACKAGES[selectedPkg].label}</span>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                  <div class="muted small">Decoration Cost</div>
+                  <div class="fw-bold">${formatINR(theme.price)}</div>
+                </div>
+                <div class="${selected ? 'selected-mark' : 'muted small'}">
+                  ${selected ? 'Selected ✓' : 'Click to Select'}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        area.appendChild(col);
+      });
+
+      document.getElementById("selectedThemeText").textContent =
+        selectedThemeId ? (themes.find(t => t.id === selectedThemeId)?.name || "None") : "None";
+    }
+
+    function updateDecorationVisibility(){
+      const decorationSection = document.getElementById("decorationSection");
+      const isDecorSelected = selectedServices.has("decor");
+
+      if(isDecorSelected){
+        decorationSection.style.display = "block";
+        renderGallery();
+      } else {
+        decorationSection.style.display = "none";
+        selectedThemeId = null;
+        document.getElementById("selectedThemeText").textContent = "None";
+      }
+    }
+
+    function selectPackage(pkg){
+      selectedPkg = pkg;
+
+      document.querySelectorAll(".pkg-card").forEach(card => {
+        const active = card.getAttribute("data-pkg") === pkg;
+        card.classList.toggle("active", active);
+        const radio = card.querySelector('input[type="radio"]');
+        if(radio) radio.checked = active;
+      });
+
+      document.getElementById("pkgText").textContent = PACKAGES[pkg].label;
+      document.getElementById("galleryLabel").textContent = PACKAGES[pkg].label;
+
+      selectedThemeId = null;
+
+      renderServices();
+      renderFoods();
+      renderGallery();
+
+      SERVICES.forEach(item => {
+        const chk = document.getElementById("service-" + item.id);
+        if(chk) chk.checked = selectedServices.has(item.id);
+      });
+
+      FOODS.forEach(item => {
+        const chk = document.getElementById("food-" + item.id);
+        if(chk) chk.checked = selectedFoods.has(item.id);
+      });
+
+      updateDecorationVisibility();
+      recalculate();
+    }
+
+    function selectTheme(themeId){
+      if(!selectedServices.has("decor")) return;
+      selectedThemeId = selectedThemeId === themeId ? null : themeId;
+      renderGallery();
+      recalculate();
+    }
+
+    function clearTheme(){
+      selectedThemeId = null;
+      renderGallery();
+      recalculate();
+    }
+
+    function toggleService(id, on){
+      if(on) selectedServices.add(id);
+      else selectedServices.delete(id);
+
+      if(id === "decor" && !on){
+        selectedThemeId = null;
+      }
+
+      updateDecorationVisibility();
+      recalculate();
+    }
+
+    function toggleFood(id, on){
+      if(on) selectedFoods.add(id);
+      else selectedFoods.delete(id);
+      recalculate();
+    }
+
+    function selectAll(on){
+      SERVICES.forEach(item => {
+        const chk = document.getElementById("service-" + item.id);
+        if(chk) chk.checked = on;
+
+        if(on) selectedServices.add(item.id);
+        else selectedServices.delete(item.id);
+      });
+
+      if(!on){
+        selectedThemeId = null;
+      }
+
+      updateDecorationVisibility();
+      recalculate();
+    }
+
+    function selectAllFood(on){
+      FOODS.forEach(item => {
+        const chk = document.getElementById("food-" + item.id);
+        if(chk) chk.checked = on;
+        if(on) selectedFoods.add(item.id);
+        else selectedFoods.delete(item.id);
+      });
+      recalculate();
+    }
+
+    function recalculate(){
+      const guests = Math.max(0, parseInt(document.getElementById("guests").value || "0", 10));
+      const locKey = document.getElementById("location").value;
+      const locMult = LOCATION_MULT[locKey] ?? 1.00;
+      const theme = getSelectedTheme();
+      const themeCost = selectedServices.has("decor") && theme ? theme.price : 0;
+
+      document.getElementById("locMultText").textContent = locMult.toFixed(2) + "x";
+      document.getElementById("themeCostText").textContent = formatINR(themeCost);
+
+      let servicesTotal = 0;
+      let foodTotal = 0;
+      const breakdown = [];
+
+      SERVICES.forEach(item => {
+        const costEl = document.getElementById("service-cost-" + item.id);
+
+        if(!selectedServices.has(item.id)){
+          if(costEl) costEl.textContent = "—";
+          return;
+        }
+
+        let cost = 0;
+
+        if(item.id === "decor"){
+          cost = themeCost;
+        } else {
+          const price = getPackagePrice(item);
+          cost = item.type === "perGuest" ? price * guests : price;
+        }
+
+        servicesTotal += cost;
+        if(costEl) costEl.textContent = formatINR(cost);
+        breakdown.push({ name:item.name, cost });
+      });
+
+      FOODS.forEach(item => {
+        const costEl = document.getElementById("food-cost-" + item.id);
+        if(!selectedFoods.has(item.id)){
+          if(costEl) costEl.textContent = "—";
+          return;
+        }
+
+        const price = getPackagePrice(item);
+        const cost = item.type === "perGuest" ? price * guests : price;
+        foodTotal += cost;
+        if(costEl) costEl.textContent = formatINR(cost);
+        breakdown.push({ name:item.name, cost });
+      });
+
+      document.getElementById("foodCostText").textContent = formatINR(foodTotal);
+      document.getElementById("selCount").textContent = `${selectedServices.size + selectedFoods.size} Selected`;
+
+      const body = document.getElementById("breakdownBody");
+      body.innerHTML = "";
+
+      if(breakdown.length === 0){
+        body.innerHTML = `<tr><td class="muted small" colspan="2">No items selected.</td></tr>`;
+        document.getElementById("totalText").textContent = "₹0";
+        document.getElementById("totalHint").textContent = "Select services and theme to estimate budget";
+        return;
+      }
+
+      breakdown.sort((a,b) => b.cost - a.cost).forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="muted small">${row.name}</td>
+          <td class="text-end fw-semibold">${formatINR(row.cost)}</td>
+        `;
+        body.appendChild(tr);
+      });
+
+      const total = (servicesTotal + foodTotal) * locMult;
+      document.getElementById("totalText").textContent = formatINR(total);
+      document.getElementById("totalHint").textContent = `Total = (Services + Food) × ${locMult.toFixed(2)}x`;
+    }
+
+    function calculateFinalTotal(){
+      const guests = Math.max(0, parseInt(document.getElementById("guests").value || "0", 10));
+      const locKey = document.getElementById("location").value;
+      const locMult = LOCATION_MULT[locKey] ?? 1.00;
+      const theme = getSelectedTheme();
+      const themeCost = selectedServices.has("decor") && theme ? theme.price : 0;
+
+      let total = 0;
+
+      SERVICES.forEach(item => {
+        if(selectedServices.has(item.id)){
+          if(item.id === "decor"){
+            total += themeCost;
+          } else {
+            const price = getPackagePrice(item);
+            total += item.type === "perGuest" ? price * guests : price;
+          }
+        }
+      });
+
+      FOODS.forEach(item => {
+        if(selectedFoods.has(item.id)){
+          const price = getPackagePrice(item);
+          total += item.type === "perGuest" ? price * guests : price;
+        }
+      });
+
+      return total * locMult;
+    }
+
+    function openSummary(){
+      const name = document.getElementById("custName").value.trim();
+      const phone = document.getElementById("custPhone").value.trim();
+      const date = document.getElementById("eventDate").value;
+      const time = document.getElementById("eventTime").value;
+      const venue = document.getElementById("venueAddress").value.trim();
+
+      if(!name || !phone || !date || !time || !venue){
+        alert("Please fill all customer details first.");
+        return;
+      }
+
+      const guests = Math.max(0, parseInt(document.getElementById("guests").value || "0", 10));
+      const locKey = document.getElementById("location").value;
+      const locMult = LOCATION_MULT[locKey] ?? 1.00;
+      const theme = getSelectedTheme();
+      const chosen = [];
+
+      SERVICES.forEach(item => {
+        if(selectedServices.has(item.id)){
+          let cost = 0;
+
+          if(item.id === "decor"){
+            cost = theme ? theme.price : 0;
+            chosen.push(`Decoration - ${theme ? theme.name : 'No theme selected'} - ${formatINR(cost)}`);
+          } else {
+            const price = getPackagePrice(item);
+            cost = item.type === "perGuest" ? price * guests : price;
+            chosen.push(`${item.name} - ${formatINR(cost)}`);
+          }
+        }
+      });
+
+      FOODS.forEach(item => {
+        if(selectedFoods.has(item.id)){
+          const price = getPackagePrice(item);
+          const cost = item.type === "perGuest" ? price * guests : price;
+          chosen.push(`${item.name} - ${formatINR(cost)}`);
+        }
+      });
+
+      document.getElementById("sumName").textContent = name;
+      document.getElementById("sumPhone").textContent = phone;
+      document.getElementById("sumDate").textContent = date;
+      document.getElementById("sumTime").textContent = time;
+      document.getElementById("sumVenue").textContent = venue;
+      document.getElementById("sumPkg").textContent = PACKAGES[selectedPkg].label;
+      document.getElementById("sumGuests").textContent = guests.toLocaleString("en-IN");
+      document.getElementById("sumLoc").textContent = `${locKey.toUpperCase()} (${locMult.toFixed(2)}x)`;
+      document.getElementById("sumTheme").textContent = selectedServices.has("decor")
+        ? (theme ? `${theme.name} (${formatINR(theme.price)})` : "Decoration selected but no theme selected")
+        : "Not selected";
+      document.getElementById("sumRuleTotal").textContent = formatINR(calculateFinalTotal());
+
+      const ul = document.getElementById("sumItems");
+      ul.innerHTML = "";
+
+      if(chosen.length === 0){
+        ul.innerHTML = `<li class="muted">No items selected.</li>`;
+      } else {
+        chosen.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          ul.appendChild(li);
+        });
+      }
+
+      document.getElementById("bookingMsg").innerHTML = "";
+      const modal = new bootstrap.Modal(document.getElementById("sumModal"));
+      modal.show();
+    }
+
+    function old_bookEvent(){}
+
+    function resetAll(){
+      selectedServices.clear();
+      selectedFoods.clear();
+      selectedThemeId = null;
+
+      document.getElementById("custName").value = "";
+      document.getElementById("custPhone").value = "";
+      document.getElementById("eventDate").value = "";
+      document.getElementById("eventTime").value = "";
+      document.getElementById("venueAddress").value = "";
+      document.getElementById("guests").value = 300;
+      document.getElementById("location").value = "town";
+      document.getElementById("cardHolder").value = "";
+      document.getElementById("cardNumber").value = "";
+      document.getElementById("cardExpiry").value = "";
+      document.getElementById("cardCvv").value = "";
+      document.getElementById("bookingMsg").innerHTML = "";
+
+      selectPackage("simple");
+      updateDecorationVisibility();
+      recalculate();
+    }
+
+    renderServices();
+    renderFoods();
+    renderGallery();
+    updateDecorationVisibility();
+    recalculate();
+  </script>
+</body>
+</html>

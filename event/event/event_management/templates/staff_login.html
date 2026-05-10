@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Portal Login | Event Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { 
+            background: linear-gradient(135deg, #1f2937, #111827);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .login-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 3rem;
+            color: #1f2937;
+        }
+        .btn-staff {
+            background-color: #0d6efd;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+        }
+        .btn-staff:hover {
+            background-color: #0b5ed7;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="text-center mb-4">
+                <i class="bi bi-shield-lock text-warning" style="font-size: 3rem;"></i>
+                <h3 class="fw-bold mt-2 text-white">Admin Portal</h3>
+                <p class="text-white-50">Authorized Personnel Only</p>
+            </div>
+            
+            <div class="login-card">
+                <h4 class="fw-bold mb-4">Sign In</h4>
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="POST" action="{% url 'staff_login' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-muted">Admin Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="bi bi-person"></i></span>
+                            <input type="text" class="form-control bg-light border-0" name="username" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-muted">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control bg-light border-0" name="password" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-staff w-100 text-white shadow">Secure Login <i class="bi bi-arrow-right ms-2"></i></button>
+                    
+                    <div class="text-center mt-4">
+                        <a href="{% url 'home' %}" class="text-decoration-none text-muted small"><i class="bi bi-house-door"></i> Return to Main Website</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

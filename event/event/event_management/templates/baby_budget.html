@@ -1,0 +1,1059 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Baby Shower Budget Estimator</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --brand:#0d6efd;
+      --bg:#0b1220;
+      --card:#ffffff;
+      --muted:#64748b;
+      --ink:#0f172a;
+      --ring: rgba(13,110,253,.18);
+      --success:#198754;
+    }
+
+    body{
+      min-height: 100vh;
+      background:
+        linear-gradient(rgba(11,18,32,.78), rgba(11,18,32,.78)),
+        url("{% static 'babyshower_bg.jpg' %}");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    .top-wrap{ padding: 28px 0 40px; }
+
+    .glass{
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.25);
+    }
+
+    .soft-card{
+      background: rgba(255,255,255,.96);
+      color: var(--ink);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 18px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.18);
+    }
+
+    .muted{ color: var(--muted); }
+
+    .pkg-card{
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.12);
+      background:#fff;
+      cursor:pointer;
+      transition: .2s ease;
+    }
+    .pkg-card:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(15,23,42,.10);
+    }
+    .pkg-card.active{
+      border-color: rgba(13,110,253,.55);
+      box-shadow: 0 0 0 6px var(--ring);
+    }
+
+    .item-card{
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.10);
+      background:#fff;
+      transition: .2s ease;
+    }
+    .item-card:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(15,23,42,.08);
+    }
+
+    .price{
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+
+    .sticky-side{
+      position: sticky;
+      top: 18px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      padding:.35rem .7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color: rgba(255,255,255,.85);
+      font-size: .9rem;
+    }
+
+    .form-check-input:checked{
+      background-color: var(--brand);
+      border-color: var(--brand);
+    }
+
+    .theme-card{
+      border: 2px solid rgba(15,23,42,.10);
+      border-radius: 18px;
+      background: #fff;
+      overflow: hidden;
+      cursor: pointer;
+      transition: .2s ease;
+      height: 100%;
+    }
+
+    .theme-card:hover{
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(15,23,42,.10);
+    }
+
+    .theme-card.selected{
+      border-color: var(--brand);
+      box-shadow: 0 0 0 6px var(--ring);
+    }
+
+    .theme-card img{
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .theme-body{
+      padding: 14px;
+    }
+
+    .theme-badge{
+      font-size: .78rem;
+      border-radius: 999px;
+      padding: .35rem .65rem;
+    }
+
+    .selected-mark{
+      color: var(--success);
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .section-title{
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .small-note{
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    .hidden{
+      display:none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-wrap">
+    <div class="container">
+
+      <div class="glass p-4 p-lg-5 mb-4">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-8">
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <span class="chip">Baby Shower • Budget Estimator</span>
+              <span class="chip">Customer Details</span>
+              <span class="chip">Theme Selection</span>
+              <span class="chip">Booking Summary</span>
+            </div>
+
+            <h1 class="display-5 fw-bold">Baby Shower Budget Estimation & Booking</h1>
+            <p class="mb-0" style="color:rgba(255,255,255,.80)">
+              Enter customer details, choose package, select services, choose decoration theme, select food menu, and get total budget instantly.
+            </p>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="glass p-3">
+              <div class="small" style="color:rgba(255,255,255,.75)">Currency</div>
+              <div class="h4 fw-bold mb-0">₹ INR</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-lg-8">
+
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <h4 class="section-title">Customer Details</h4>
+            <div class="small-note mb-3">Enter customer information for baby shower booking.</div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Customer Name</label>
+                <input type="text" class="form-control" id="customerName" placeholder="Enter customer name">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Phone Number</label>
+                <input type="tel" class="form-control" id="customerPhone" placeholder="Enter 10 digit phone number" maxlength="10">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Event Date</label>
+                <input type="date" class="form-control" id="eventDate">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Event Time</label>
+                <input type="time" class="form-control" id="eventTime">
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-semibold">Event Address</label>
+                <textarea class="form-control" id="eventAddress" rows="3" placeholder="Enter full address"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <h4 class="section-title">Select Package</h4>
+                <div class="small-note">Each package has different service pricing.</div>
+              </div>
+              <div class="muted">Selected Package: <span class="fw-semibold" id="pkgText">Simple</span></div>
+            </div>
+
+            <div class="row g-3 mt-2">
+              <div class="col-md-4">
+                <div class="pkg-card p-3 active" data-pkg="simple" onclick="selectPackage('simple')">
+                  <div class="d-flex justify-content-between">
+                    <div class="fw-bold">Simple</div>
+                    <input class="form-check-input" type="radio" name="pkg" checked>
+                  </div>
+                  <div class="muted small mt-1">Minimal décor, standard vendors</div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="pkg-card p-3" data-pkg="basic" onclick="selectPackage('basic')">
+                  <div class="d-flex justify-content-between">
+                    <div class="fw-bold">Basic</div>
+                    <input class="form-check-input" type="radio" name="pkg">
+                  </div>
+                  <div class="muted small mt-1">Better theme and vendors</div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="pkg-card p-3" data-pkg="luxury" onclick="selectPackage('luxury')">
+                  <div class="d-flex justify-content-between">
+                    <div class="fw-bold">Luxury</div>
+                    <input class="form-check-input" type="radio" name="pkg">
+                  </div>
+                  <div class="muted small mt-1">Premium theme and top vendors</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <h4 class="section-title">Guests & Location</h4>
+            <div class="small-note mb-3">Guests affect food and return gifts. Location affects final pricing.</div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Guest Count</label>
+                <input type="number" class="form-control" id="guests" value="80" min="20" max="1000" oninput="recalculate()">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Location</label>
+                <select class="form-select" id="location" onchange="recalculate()">
+                  <option value="tier2" selected>Tier-2 City / Town (Standard)</option>
+                  <option value="metro">Metro City (Higher)</option>
+                  <option value="rural">Rural Area (Lower)</option>
+                  <option value="premium">Premium Venue Zone (High)</option>
+                </select>
+                <div class="muted small mt-1">Location multiplier: <span class="fw-semibold" id="locMultText">1.00x</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <h4 class="section-title">Select Services</h4>
+                <div class="small-note">Service prices change based on selected package.</div>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="selectAll(true)">Select All</button>
+                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="selectAll(false)">Clear</button>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row g-3" id="itemsArea"></div>
+          </div>
+
+          <!-- Theme section hidden by default -->
+          <div class="soft-card p-3 p-lg-4 hidden" id="themeSection">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <h4 class="section-title">Choose Theme Decoration</h4>
+                <div class="small-note">Theme images display only when Theme Decoration is selected.</div>
+              </div>
+              <div class="text-end">
+                <span class="badge text-bg-primary-subtle" id="galleryLabel">Simple</span>
+                <div class="small muted mt-2">
+                  Selected Theme:
+                  <span class="fw-semibold" id="selectedThemeText">None</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3 mb-2">
+              <button class="btn btn-outline-secondary btn-sm" type="button" onclick="clearTheme()">Clear Theme</button>
+            </div>
+
+            <div class="row g-3" id="galleryArea"></div>
+          </div>
+
+        </div>
+
+        <div class="col-lg-4">
+          <div class="soft-card p-3 p-lg-4 sticky-side">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="fw-semibold muted small">Totals</div>
+              <span class="badge text-bg-primary-subtle" id="selCount">0 Selected</span>
+            </div>
+
+            <div class="mt-3">
+              <div class="muted small">Estimated Total</div>
+              <div class="display-6 price mb-0" id="totalText">₹0</div>
+              <div class="muted small" id="totalHint">Select items to estimate budget</div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="muted small fw-semibold">Theme Cost</div>
+              <div class="fw-bold" id="themeCostText">₹0</div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="muted small fw-semibold">ML Predicted Total</div>
+              <div class="fw-bold" id="mlText">₹0</div>
+            </div>
+
+            <hr>
+
+            <div class="muted small fw-semibold mb-2">Breakdown</div>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead>
+                  <tr class="muted small">
+                    <th>Item</th>
+                    <th class="text-end">Cost</th>
+                  </tr>
+                </thead>
+                <tbody id="breakdownBody">
+                  <tr><td class="muted small" colspan="2">No items selected.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <hr>
+
+            <button class="btn btn-primary w-100" type="button" onclick="openSummary()">View Summary</button>
+            <button class="btn btn-outline-dark w-100 mt-2" type="button" onclick="resetAll()">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Modal -->
+  <div class="modal fade" id="sumModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="border-radius:18px; color:#000;">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Baby Shower Booking Summary</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-5">
+              <div class="soft-card p-3">
+                <div class="muted small">Customer Name</div>
+                <div class="fw-bold" id="sumCustomerName"></div>
+
+                <div class="muted small mt-2">Phone Number</div>
+                <div class="fw-bold" id="sumCustomerPhone"></div>
+
+                <div class="muted small mt-2">Event Date</div>
+                <div class="fw-bold" id="sumDate"></div>
+
+                <div class="muted small mt-2">Event Time</div>
+                <div class="fw-bold" id="sumTime"></div>
+
+                <div class="muted small mt-2">Address</div>
+                <div class="fw-bold" id="sumAddress"></div>
+
+                <div class="muted small mt-2">Package</div>
+                <div class="fw-bold" id="sumPkg"></div>
+
+                <div class="muted small mt-2">Guests</div>
+                <div class="fw-bold" id="sumGuests"></div>
+
+                <div class="muted small mt-2">Location</div>
+                <div class="fw-bold" id="sumLoc"></div>
+
+                <div class="muted small mt-2">Theme</div>
+                <div class="fw-bold" id="sumTheme"></div>
+              </div>
+            </div>
+
+            <div class="col-md-7">
+              <div class="soft-card p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="muted small">Estimated Total</div>
+                    <div class="h3 fw-bold mb-0" id="sumRuleTotal"></div>
+                  </div>
+                  <div class="text-end">
+                    <div class="muted small">ML Predicted Total</div>
+                    <div class="h4 fw-bold mb-0" id="sumMlTotal"></div>
+                  </div>
+                </div>
+
+                <hr>
+
+                <div class="muted small fw-semibold mb-2">Selected Items</div>
+                <ul class="mb-0" id="sumItems"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Close</button>
+          <button class="btn btn-primary" type="button" onclick="openBookingModal()">Book an Event</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Modal -->
+  <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius:18px; color:#000;">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Book Baby Shower Event</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <label class="form-label fw-semibold">Enter Card Number</label>
+          <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+          <div class="form-text">Enter valid 16 digit card number.</div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-success" type="button" onclick="confirmBooking()">Confirm Booking</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Food Menu Modal -->
+  <div class="modal fade" id="foodMenuModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="border-radius:18px; color:#000;">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Food Menu</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <h6 class="fw-bold">Starters</h6>
+              <div><input type="checkbox" onchange="updateFoodMenuTotal(event, 35)"> Veg Manchuria - ₹35</div>
+              <div><input type="checkbox" onchange="updateFoodMenuTotal(event, 30)"> Samosa - ₹30</div>
+              <div><input type="checkbox" onchange="updateFoodMenuTotal(event, 40)"> Paneer Tikka - ₹40</div>
+            </div>
+
+            <div class="col-md-6">
+              <h6 class="fw-bold">Main Course</h6>
+              <div><input type="checkbox" onchange="updateFoodMenuTotal(event, 60)"> Veg Biryani - ₹60</div>
+              <div><input type="checkbox" onchange="updateFoodMenuTotal(event, 30)"> Fried Rice - ₹30</div>
+              <div><input type="checkbox" onchange="updateFoodMenuTotal(event, 35)"> Curry & Roti - ₹35</div>
+            </div>
+
+            <div class="col-md-6">
+              <h6 class="fw-bold mt-2">Desserts</h6>
+              <div><input type="checkbox" onchange="updateFoodMenuTotal(event, 25)"> Ice Cream - ₹25</div>
+              <div><input type="checkbox" onchange="updateFoodMenuTotal(event, 20)"> Gulab Jamun - ₹20</div>
+            </div>
+
+            <div class="col-md-6">
+              <h6 class="fw-bold mt-2">Drinks</h6>
+              <div><input type="checkbox" onchange="updateFoodMenuTotal(event, 20)"> Cool Drinks - ₹20</div>
+              <div><input type="checkbox" onchange="updateFoodMenuTotal(event, 25)"> Fresh Juice - ₹25</div>
+            </div>
+          </div>
+
+          <hr>
+          <div class="fw-bold">Food Menu Cost Per Guest: ₹<span id="foodMenuTotal">0</span></div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+  function confirmBooking(){ _apiBookEvent(); }
+  function bookEvent(){ _apiBookEvent(); }
+  
+  function _apiBookEvent() {
+      const _guests = parseInt(document.getElementById("guests")?.value || document.getElementById("guestCount")?.value || "50");
+      const _totalText = document.getElementById("sumRuleTotal")?.textContent || document.getElementById("grandTotal")?.textContent || "0";
+      const _total = parseInt(_totalText.replace(/\D/g, '')) || 0;
+      const _eventDate = document.getElementById("eventDate")?.value || new Date().toISOString().split('T')[0];
+      const _custName = document.getElementById("custName")?.value || "Customer";
+      
+      fetch('/api/create-budget-booking/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+              event_name: document.title.split(' ')[0] + ' Event For ' + _custName,
+              event_date: _eventDate,
+              guest_count: _guests,
+              budget_estimate: _total
+          })
+      }).then(r => r.json()).then(d => {
+          if(d.success) {
+              window.location.href = '/checkout/' + d.booking_id + '/';
+          } else {
+              alert("Error: " + d.error);
+          }
+      });
+  }
+
+    const ITEMS = [
+      { id:'venue', name:'Venue / Hall', type:'fixed', prices:{ simple:25000, basic:40000, luxury:70000 }, icon:'🏠' },
+      { id:'decor', name:'Theme Decoration', type:'fixed', prices:{ simple:18000, basic:28000, luxury:45000 }, icon:'🎈',hasDecor:true },
+      { id:'food', name:'Food / Catering', type:'perGuest', prices:{ simple:450, basic:700, luxury:1200 }, icon:'🍽️' },
+      { id:'games', name:'Games & Activities', type:'fixed', prices:{ simple:5000, basic:9000, luxury:16000 }, icon:'🎯' },
+      { id:'emcee', name:'Anchor / MC', type:'fixed', prices:{ simple:8000, basic:15000, luxury:28000 }, icon:'🎤' },
+      { id:'photo', name:'Photography', type:'fixed', prices:{ simple:12000, basic:22000, luxury:38000 }, icon:'📸' },
+      { id:'returnGift', name:'Return Gifts', type:'perGuest', prices:{ simple:120, basic:220, luxury:400 }, icon:'🎁' }
+    ];
+
+    const PACKAGES = {
+      simple: { label:'Simple' },
+      basic:  { label:'Basic'  },
+      luxury: { label:'Luxury' }
+    };
+
+    const LOCATION_MULT = {
+      tier2: 1.00,
+      metro: 1.12,
+      rural: 0.93,
+      premium: 1.20
+    };
+
+    const THEMES = {
+      simple: [
+        { id: "simple_pastel_theme", name: "Simple Pastel Theme", desc: "Soft pastel decor with balloons and neat backdrop.", price: 0, image: "{% static 'sbaby1.jpg' %}" },
+        { id: "simple_mom_to_be_theme", name: "Simple Mom-To-Be Theme", desc: "Budget-friendly setup with floral and soft balloon styling.", price: 400, image: "{% static 'sbaby2.jpg' %}" },
+        
+      ],
+      basic: [
+        { id: "basic_floral_theme", name: "Basic Floral Theme", desc: "Better decor with floral arches and attractive seating.", price: 0, image: "{% static 'bbaby1.jpg' %}" },
+        { id: "basic_teddy_theme", name: "Basic Teddy Theme", desc: "Playful baby shower setup with props and balanced colors.", price: 24000, image: "{% static 'bbaby2.jpg' %}" },
+        
+      ],
+      luxury: [
+        { id: "luxury_royal_theme", name: "Luxury Royal Theme", desc: "Grand baby shower setup with premium floral styling.", price: 42000, image: "{% static 'lbaby1.jpg' %}" },
+        { id: "luxury_fantasy_theme", name: "Luxury Fantasy Theme", desc: "Designer premium backdrop with rich visual elements.", price: 45000, image: "{% static 'lbaby2.jpg' %}" },
+        
+      ]
+    };
+
+    let selectedPkg = "simple";
+    let foodMenuCostPerGuest = 0;
+    const selected = new Set();
+    let selectedThemeId = null;
+
+    function formatINR(n){
+      return "₹" + Math.round(n).toLocaleString("en-IN");
+    }
+
+    function getPackagePrice(item){
+      return item.prices[selectedPkg];
+    }
+
+    function getCurrentThemes(){
+      return THEMES[selectedPkg] || [];
+    }
+
+    function getSelectedTheme(){
+      return getCurrentThemes().find(t => t.id === selectedThemeId) || null;
+    }
+
+    function updateThemeSectionVisibility(){
+      const themeSection = document.getElementById("themeSection");
+      const isDecorSelected = selected.has("decor");
+
+      if(isDecorSelected){
+        themeSection.classList.remove("hidden");
+        renderGallery();
+      } else {
+        themeSection.classList.add("hidden");
+        selectedThemeId = null;
+        document.getElementById("selectedThemeText").textContent = "None";
+        document.getElementById("themeCostText").textContent = "₹0";
+      }
+    }
+
+    function openFoodMenu(){
+      const modal = new bootstrap.Modal(document.getElementById("foodMenuModal"));
+      modal.show();
+    }
+
+    function updateFoodMenuTotal(e, price){
+      const checkbox = e.target;
+
+      if(checkbox.checked) foodMenuCostPerGuest += price;
+      else foodMenuCostPerGuest -= price;
+
+      if(foodMenuCostPerGuest < 0) foodMenuCostPerGuest = 0;
+
+      document.getElementById("foodMenuTotal").textContent = foodMenuCostPerGuest;
+
+      const foodChk = document.getElementById("chk-food");
+      if(foodMenuCostPerGuest > 0){
+        if(foodChk) foodChk.checked = true;
+        selected.add("food");
+      } else {
+        if(foodChk) foodChk.checked = false;
+        selected.delete("food");
+      }
+
+      renderItems();
+      recalculate();
+    }
+
+    function renderItems(){
+      const area = document.getElementById("itemsArea");
+      area.innerHTML = "";
+
+      ITEMS.forEach(item=>{
+        const unitPrice = (item.id === "food" && foodMenuCostPerGuest > 0)
+          ? foodMenuCostPerGuest
+          : getPackagePrice(item);
+
+        const baseLine = (item.type === "perGuest")
+          ? `<div class="muted small" id="base-${item.id}">Base: ${formatINR(unitPrice)} / guest</div>`
+          : `<div class="muted small" id="base-${item.id}">Base: ${formatINR(unitPrice)}</div>`;
+
+        const extraInfo = item.id === "food"
+          ? `<button class="btn btn-sm btn-success mt-2" type="button" onclick="openFoodMenu()">Select Food Menu</button>`
+          : ``;
+
+        const checkedAttr = selected.has(item.id) ? "checked" : "";
+
+        const col = document.createElement("div");
+        col.className = "col-md-6";
+
+        col.innerHTML = `
+          <div class="item-card p-3">
+            <div class="d-flex align-items-start justify-content-between gap-2">
+              <div>
+                <div class="fw-bold">${item.icon} ${item.name}</div>
+                ${baseLine}
+                <div class="muted small">Selected cost: <span class="fw-semibold" id="cost-${item.id}">—</span></div>
+                ${extraInfo}
+              </div>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="chk-${item.id}" ${checkedAttr}
+                  onchange="toggleItem('${item.id}', this.checked)">
+              </div>
+            </div>
+          </div>
+        `;
+        area.appendChild(col);
+      });
+    }
+
+    function renderGallery(){
+      const area = document.getElementById("galleryArea");
+      area.innerHTML = "";
+
+      const themes = getCurrentThemes();
+      const currentThemeExists = themes.some(t => t.id === selectedThemeId);
+      if(!currentThemeExists) selectedThemeId = null;
+
+      themes.forEach((theme)=>{
+        const isSelected = selectedThemeId === theme.id;
+
+        const col = document.createElement("div");
+        col.className = "col-md-6";
+
+        col.innerHTML = `
+          <div class="theme-card ${isSelected ? 'selected' : ''}" onclick="selectTheme('${theme.id}')">
+            <img src="${theme.image}" alt="${theme.name}">
+            <div class="theme-body">
+              <div class="d-flex justify-content-between align-items-start gap-2">
+                <div>
+                  <div class="fw-bold">${theme.name}</div>
+                  <div class="muted small mt-1">${theme.desc}</div>
+                </div>
+                <span class="badge text-bg-light theme-badge">${PACKAGES[selectedPkg].label}</span>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                  <div class="muted small">Theme Cost</div>
+                  <div class="fw-bold">${formatINR(theme.price)}</div>
+                </div>
+                <div class="${isSelected ? 'selected-mark' : 'muted small'}">
+                  ${isSelected ? 'Selected ✓' : 'Click to Select'}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        area.appendChild(col);
+      });
+
+      const selTheme = getSelectedTheme();
+      document.getElementById("selectedThemeText").textContent = selTheme ? selTheme.name : "None";
+      document.getElementById("galleryLabel").textContent = PACKAGES[selectedPkg].label;
+    }
+
+    function selectTheme(themeId){
+      if(!selected.has("decor")) return;
+
+      if(selectedThemeId === themeId) selectedThemeId = null;
+      else selectedThemeId = themeId;
+
+      renderGallery();
+      recalculate();
+    }
+
+    function clearTheme(){
+      selectedThemeId = null;
+      renderGallery();
+      recalculate();
+    }
+
+    function selectPackage(pkg){
+      selectedPkg = pkg;
+
+      document.querySelectorAll(".pkg-card").forEach(card=>{
+        const active = card.getAttribute("data-pkg") === pkg;
+        card.classList.toggle("active", active);
+        const radio = card.querySelector('input[type="radio"]');
+        if(radio) radio.checked = active;
+      });
+
+      document.getElementById("pkgText").textContent = PACKAGES[pkg].label;
+      updateThemeSectionVisibility();
+      recalculate();
+    }
+
+    function toggleItem(id, on){
+      if(id === "food" && on && foodMenuCostPerGuest <= 0){
+        alert("Please select food menu first");
+        const foodChk = document.getElementById("chk-food");
+        if(foodChk) foodChk.checked = false;
+        return;
+      }
+
+      if(on) selected.add(id);
+      else selected.delete(id);
+
+      if(id === "decor" && !on){
+        selectedThemeId = null;
+      }
+
+      updateThemeSectionVisibility();
+      recalculate();
+    }
+
+    function selectAll(on){
+      ITEMS.forEach(it=>{
+        const chk = document.getElementById("chk-" + it.id);
+        if(!chk) return;
+
+        if(on){
+          if(it.id === "food" && foodMenuCostPerGuest <= 0){
+            chk.checked = false;
+          } else {
+            chk.checked = true;
+            selected.add(it.id);
+          }
+        } else {
+          chk.checked = false;
+          selected.delete(it.id);
+        }
+      });
+
+      if(!on) selectedThemeId = null;
+
+      updateThemeSectionVisibility();
+      recalculate();
+    }
+
+    function resetAll(){
+      selected.clear();
+      selectedThemeId = null;
+      foodMenuCostPerGuest = 0;
+
+      document.getElementById("customerName").value = "";
+      document.getElementById("customerPhone").value = "";
+      document.getElementById("eventDate").value = "";
+      document.getElementById("eventTime").value = "";
+      document.getElementById("eventAddress").value = "";
+
+      document.getElementById("guests").value = 80;
+      document.getElementById("location").value = "tier2";
+      document.getElementById("foodMenuTotal").textContent = "0";
+
+      document.querySelectorAll("#foodMenuModal input[type='checkbox']").forEach(cb => cb.checked = false);
+
+      ITEMS.forEach(it=>{
+        const chk = document.getElementById("chk-" + it.id);
+        if(chk) chk.checked = false;
+
+        const costEl = document.getElementById("cost-" + it.id);
+        if(costEl) costEl.textContent = "—";
+      });
+
+      selectPackage("simple");
+      updateThemeSectionVisibility();
+      renderItems();
+      recalculate();
+    }
+
+    function recalculate(){
+      const guests = Math.max(0, parseInt(document.getElementById("guests").value || "0", 10));
+      const locKey = document.getElementById("location").value;
+      const locMult = LOCATION_MULT[locKey] ?? 1.00;
+      const selectedTheme = selected.has("decor") ? getSelectedTheme() : null;
+      const themeCost = selectedTheme ? selectedTheme.price : 0;
+
+      document.getElementById("locMultText").textContent = locMult.toFixed(2) + "x";
+      document.getElementById("themeCostText").textContent = formatINR(themeCost);
+
+      let sumBase = 0;
+      const breakdown = [];
+
+      ITEMS.forEach(item=>{
+        const costSpan = document.getElementById("cost-" + item.id);
+
+        if(!selected.has(item.id)){
+          if(costSpan) costSpan.textContent = "—";
+          return;
+        }
+
+        const unitPrice = (item.id === "food" && foodMenuCostPerGuest > 0)
+          ? foodMenuCostPerGuest
+          : getPackagePrice(item);
+
+        const itemCost = (item.type === "perGuest") ? unitPrice * guests : unitPrice;
+
+        sumBase += itemCost;
+        if(costSpan) costSpan.textContent = formatINR(itemCost);
+        breakdown.push({ name:item.name, cost:itemCost });
+      });
+
+      if(selectedTheme){
+        breakdown.push({ name:`Theme - ${selectedTheme.name}`, cost:themeCost });
+      }
+
+      document.getElementById("selCount").textContent = `${selected.size} Selected`;
+
+      const body = document.getElementById("breakdownBody");
+      body.innerHTML = "";
+
+      if(breakdown.length === 0){
+        body.innerHTML = `<tr><td class="muted small" colspan="2">No items selected.</td></tr>`;
+        document.getElementById("totalText").textContent = "₹0";
+        document.getElementById("totalHint").textContent = "Select items and theme to estimate budget";
+        document.getElementById("mlText").textContent = "₹0";
+        return;
+      }
+
+      breakdown.sort((a,b)=>b.cost-a.cost).forEach(row=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="muted small">${row.name}</td>
+          <td class="text-end fw-semibold">${formatINR(row.cost)}</td>
+        `;
+        body.appendChild(tr);
+      });
+
+      const ruleTotal = (sumBase + themeCost) * locMult;
+
+      document.getElementById("totalText").textContent = formatINR(ruleTotal);
+      document.getElementById("totalHint").textContent =
+        `Total = (Services + Theme) × Location Multiplier (${locMult.toFixed(2)}x)`;
+
+      document.getElementById("mlText").textContent = formatINR(ruleTotal);
+    }
+
+    function validateCustomerDetails(){
+      const name = document.getElementById("customerName").value.trim();
+      const phone = document.getElementById("customerPhone").value.trim();
+      const date = document.getElementById("eventDate").value;
+      const time = document.getElementById("eventTime").value;
+      const address = document.getElementById("eventAddress").value.trim();
+
+      if(name === ""){
+        alert("Please enter customer name");
+        document.getElementById("customerName").focus();
+        return false;
+      }
+
+      if(!/^[0-9]{10}$/.test(phone)){
+        alert("Please enter valid 10 digit phone number");
+        document.getElementById("customerPhone").focus();
+        return false;
+      }
+
+      if(date === ""){
+        alert("Please select event date");
+        document.getElementById("eventDate").focus();
+        return false;
+      }
+
+      if(time === ""){
+        alert("Please select event time");
+        document.getElementById("eventTime").focus();
+        return false;
+      }
+
+      if(address === ""){
+        alert("Please enter event address");
+        document.getElementById("eventAddress").focus();
+        return false;
+      }
+
+      return true;
+    }
+
+    function openSummary(){
+      if(!validateCustomerDetails()) return;
+
+      const customerName = document.getElementById("customerName").value.trim();
+      const customerPhone = document.getElementById("customerPhone").value.trim();
+      const eventDate = document.getElementById("eventDate").value;
+      const eventTime = document.getElementById("eventTime").value;
+      const eventAddress = document.getElementById("eventAddress").value.trim();
+
+      const guests = Math.max(0, parseInt(document.getElementById("guests").value || "0", 10));
+      const locKey = document.getElementById("location").value;
+      const locMult = LOCATION_MULT[locKey] ?? 1.00;
+      const selectedTheme = selected.has("decor") ? getSelectedTheme() : null;
+      const themeCost = selectedTheme ? selectedTheme.price : 0;
+
+      let sumBase = 0;
+      const chosen = [];
+
+      ITEMS.forEach(item=>{
+        if(!selected.has(item.id)) return;
+
+        const unitPrice = (item.id === "food" && foodMenuCostPerGuest > 0)
+          ? foodMenuCostPerGuest
+          : getPackagePrice(item);
+
+        const itemCost = (item.type === "perGuest") ? unitPrice * guests : unitPrice;
+
+        chosen.push(`${item.name} - ${formatINR(itemCost)}`);
+        sumBase += itemCost;
+      });
+
+      if(selectedTheme){
+        chosen.push(`Theme: ${selectedTheme.name} - ${formatINR(themeCost)}`);
+      }
+
+      const ruleTotal = (sumBase + themeCost) * locMult;
+
+      document.getElementById("sumCustomerName").textContent = customerName;
+      document.getElementById("sumCustomerPhone").textContent = customerPhone;
+      document.getElementById("sumDate").textContent = eventDate;
+      document.getElementById("sumTime").textContent = eventTime;
+      document.getElementById("sumAddress").textContent = eventAddress;
+      document.getElementById("sumPkg").textContent = PACKAGES[selectedPkg].label;
+      document.getElementById("sumGuests").textContent = guests.toLocaleString("en-IN");
+      document.getElementById("sumLoc").textContent = `${locKey.toUpperCase()} (${locMult.toFixed(2)}x)`;
+      document.getElementById("sumTheme").textContent = selectedTheme
+        ? `${selectedTheme.name} (${formatINR(themeCost)})`
+        : "None";
+      document.getElementById("sumRuleTotal").textContent = formatINR(ruleTotal);
+      document.getElementById("sumMlTotal").textContent = formatINR(ruleTotal);
+
+      const ul = document.getElementById("sumItems");
+      ul.innerHTML = "";
+
+      if(chosen.length === 0){
+        ul.innerHTML = `<li class="muted">No items selected.</li>`;
+      } else {
+        chosen.forEach(x=>{
+          const li = document.createElement("li");
+          li.textContent = x;
+          ul.appendChild(li);
+        });
+      }
+
+      const modal = new bootstrap.Modal(document.getElementById("sumModal"));
+      modal.show();
+    }
+
+    function openBookingModal(){
+      const summaryModalEl = document.getElementById("sumModal");
+      const summaryModal = bootstrap.Modal.getInstance(summaryModalEl);
+      if(summaryModal) summaryModal.hide();
+
+      document.getElementById("cardNumber").value = "";
+
+      setTimeout(() => {
+        const bookingModal = new bootstrap.Modal(document.getElementById("bookingModal"));
+        bookingModal.show();
+      }, 300);
+    }
+
+    function old_confirmBooking(){}
+
+    renderItems();
+    updateThemeSectionVisibility();
+    recalculate();
+  </script>
+</body>
+</html>

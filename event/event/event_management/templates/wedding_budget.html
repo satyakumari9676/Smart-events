@@ -1,0 +1,1259 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Wedding Budget Estimator</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --brand:#0d6efd;
+      --bg:#0b1220;
+      --card:#ffffff;
+      --muted:#64748b;
+      --ink:#0f172a;
+      --ring: rgba(13,110,253,.18);
+      --success:#198754;
+    }
+
+    body{
+      min-height: 100vh;
+      background:
+        linear-gradient(rgba(11,18,32,.78), rgba(11,18,32,.78)),
+        url("{% static 'wedbackground.jpg' %}");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    .top-wrap{ padding: 28px 0 40px; }
+
+    .glass{
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.25);
+    }
+
+    .soft-card{
+      background: rgba(255,255,255,.96);
+      color: var(--ink);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 18px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.18);
+    }
+
+    .muted{ color: var(--muted); }
+
+    .pkg-card{
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.12);
+      background:#fff;
+      cursor:pointer;
+      transition: .2s ease;
+    }
+    .pkg-card:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(15,23,42,.10);
+    }
+    .pkg-card.active{
+      border-color: rgba(13,110,253,.55);
+      box-shadow: 0 0 0 6px var(--ring);
+    }
+
+    .item-card{
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.10);
+      background:#fff;
+      transition: .2s ease;
+    }
+    .item-card:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(15,23,42,.08);
+    }
+
+    .price{
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+
+    .sticky-side{
+      position: sticky;
+      top: 18px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      padding:.35rem .7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color: rgba(255,255,255,.85);
+      font-size: .9rem;
+    }
+
+    .form-check-input:checked{
+      background-color: var(--brand);
+      border-color: var(--brand);
+    }
+
+    .decor-card{
+      border: 2px solid rgba(15,23,42,.10);
+      border-radius: 18px;
+      background: #fff;
+      overflow: hidden;
+      cursor: pointer;
+      transition: .2s ease;
+      height: 100%;
+    }
+
+    .decor-card:hover{
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(15,23,42,.10);
+    }
+
+    .decor-card.selected{
+      border-color: var(--brand);
+      box-shadow: 0 0 0 6px var(--ring);
+    }
+
+    .decor-card img{
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .decor-body{
+      padding: 14px;
+    }
+
+    .decor-badge{
+      font-size: .78rem;
+      border-radius: 999px;
+      padding: .35rem .65rem;
+    }
+
+    .selected-mark{
+      color: var(--success);
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .section-title{
+      border-left: 5px solid var(--brand);
+      padding-left: 12px;
+      margin-bottom: 14px;
+    }
+
+    .decor-group{
+      border: 1px solid rgba(15,23,42,.08);
+      border-radius: 18px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .empty-note{
+      border: 1px dashed rgba(15,23,42,.18);
+      border-radius: 14px;
+      padding: 18px;
+      background: #f8fafc;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-wrap">
+    <div class="container">
+
+      <div class="glass p-4 p-lg-5 mb-4">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-8">
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <span class="chip">Wedding • Budget Estimator</span>
+              <span class="chip">Selectable Services</span>
+              <span class="chip">Function-wise Decorations</span>
+            </div>
+            <h1 class="main-title display-5">Wedding Budget Estimation & Planning</h1>
+            <p class="mb-0" style="color:rgba(255,255,255,.78)">
+              Choose package, select wedding functions & services, select decorations for each function, and get total estimate.
+            </p>
+          </div>
+          <div class="col-lg-4">
+            <div class="glass p-3">
+              <div class="small" style="color:rgba(255,255,255,.75)">Currency</div>
+              <div class="h4 fw-bold mb-0">₹ INR</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+
+        <div class="col-lg-8">
+
+          <!-- Customer Details -->
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <h4 class="fw-bold mb-3">Customer Details</h4>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Customer Name</label>
+                <input type="text" class="form-control" id="custName" placeholder="Enter customer name">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Phone Number</label>
+                <input type="text" class="form-control" id="custPhone" placeholder="Enter phone number">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Date of Event</label>
+                <input type="date" class="form-control" id="eventDate">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Time of Event</label>
+                <input type="time" class="form-control" id="eventTime">
+              </div>
+            </div>
+          </div>
+
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <h4 class="fw-bold mb-1">Select Package</h4>
+                <div class="muted">Each package has different service and decoration pricing.</div>
+              </div>
+              <div class="muted">Selected Package: <span class="fw-semibold" id="pkgMultText">Simple</span></div>
+            </div>
+
+            <div class="row g-3 mt-2">
+              <div class="col-md-4">
+                <div class="pkg-card p-3 active" data-pkg="simple" onclick="selectPackage('simple')">
+                  <div class="d-flex justify-content-between">
+                    <div class="fw-bold">Simple</div>
+                    <input class="form-check-input" type="radio" name="pkg" checked>
+                  </div>
+                  <div class="muted small mt-1">Minimal decor, standard vendors</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="pkg-card p-3" data-pkg="basic" onclick="selectPackage('basic')">
+                  <div class="d-flex justify-content-between">
+                    <div class="fw-bold">Basic</div>
+                    <input class="form-check-input" type="radio" name="pkg">
+                  </div>
+                  <div class="muted small mt-1">Better decor & better vendors</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="pkg-card p-3" data-pkg="luxury" onclick="selectPackage('luxury')">
+                  <div class="d-flex justify-content-between">
+                    <div class="fw-bold">Luxury</div>
+                    <input class="form-check-input" type="radio" name="pkg">
+                  </div>
+                  <div class="muted small mt-1">Premium decor and top vendors</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <h4 class="fw-bold mb-1">Inputs (Guests & Location)</h4>
+            <div class="muted mb-3">Guests affect food cost. Location affects overall pricing.</div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Guest Count</label>
+                <input type="number" class="form-control" id="guests" value="200" min="50" max="3000" oninput="recalculate()">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Location</label>
+                <select class="form-select" id="location" onchange="recalculate()">
+                  <option value="tier2" selected>Tier-2 City / Town (Standard)</option>
+                  <option value="metro">Metro City (Higher)</option>
+                  <option value="rural">Rural Area (Lower)</option>
+                  <option value="premium">Premium Venue Zone (High)</option>
+                </select>
+                <div class="muted small mt-1">Location multiplier: <span class="fw-semibold" id="locMultText">1.00x</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <h4 class="fw-bold mb-1">Select Functions & Services</h4>
+                <div class="muted">Decoration section appears for selected wedding functions only.</div>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="selectAll(true)">Select All</button>
+                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="selectAll(false)">Clear</button>
+              </div>
+            </div>
+            <hr>
+            <div class="row g-3" id="itemsArea"></div>
+          </div>
+
+          <div class="soft-card p-3 p-lg-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <h4 class="fw-bold mb-1">Function-wise Decoration Selection</h4>
+                <div class="muted">Bride/Groom, Haldi, Sangeeth, Mehendi, Wedding services</div>
+              </div>
+              <div>
+                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="clearAllDecorations()">Clear All Decorations</button>
+              </div>
+            </div>
+
+            <div id="decorationsContainer" class="mt-4"></div>
+          </div>
+
+        </div>
+
+        <div class="col-lg-4">
+          <div class="soft-card p-3 p-lg-4 sticky-side">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="fw-semibold muted small">Totals</div>
+              <span class="badge text-bg-primary-subtle" id="selCount">0 Selected</span>
+            </div>
+
+            <div class="mt-3">
+              <div class="muted small">Estimated Total</div>
+              <div class="display-6 price mb-0" id="totalText">₹0</div>
+              <div class="muted small" id="totalHint">Select items to estimate budget</div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="muted small fw-semibold">Decoration Cost</div>
+              <div class="fw-bold" id="decorCostText">₹0</div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="muted small fw-semibold">ML Predicted Total</div>
+              <div class="fw-bold" id="mlText">₹0</div>
+            </div>
+
+            <hr>
+
+            <div class="muted small fw-semibold mb-2">Breakdown</div>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead>
+                  <tr class="muted small">
+                    <th>Item</th>
+                    <th class="text-end">Cost</th>
+                  </tr>
+                </thead>
+                <tbody id="breakdownBody">
+                  <tr><td class="muted small" colspan="2">No items selected.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <hr>
+
+            <button class="btn btn-primary w-100" type="button" onclick="openSummary()">View Summary</button>
+            <button class="btn btn-outline-dark w-100 mt-2" type="button" onclick="resetAll()">Reset</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Modal -->
+  <div class="modal fade" id="sumModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="border-radius:18px; color:#000;">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Wedding Budget Summary</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="soft-card p-3">
+                <div class="muted small">Customer Name</div>
+                <div class="fw-bold" id="sumName"></div>
+
+                <div class="muted small mt-2">Phone Number</div>
+                <div class="fw-bold" id="sumPhone"></div>
+
+                <div class="muted small mt-2">Date of Event</div>
+                <div class="fw-bold" id="sumDate"></div>
+
+                <div class="muted small mt-2">Time of Event</div>
+                <div class="fw-bold" id="sumTime"></div>
+
+                <div class="muted small mt-2">Package</div>
+                <div class="fw-bold" id="sumPkg"></div>
+
+                <div class="muted small mt-2">Guests</div>
+                <div class="fw-bold" id="sumGuests"></div>
+
+                <div class="muted small mt-2">Location</div>
+                <div class="fw-bold" id="sumLoc"></div>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="soft-card p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="muted small">Estimated Total</div>
+                    <div class="h3 fw-bold mb-0" id="sumRuleTotal"></div>
+                  </div>
+                  <div class="text-end">
+                    <div class="muted small">ML Predicted Total</div>
+                    <div class="h4 fw-bold mb-0" id="sumMlTotal"></div>
+                  </div>
+                </div>
+                <hr>
+                <div class="muted small fw-semibold mb-2">Selected Items & Decorations</div>
+                <ul class="mb-0" id="sumItems"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Close</button>
+          <button class="btn btn-primary" type="button" onclick="openBookingModal()">Book an Event</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Modal -->
+  <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius:18px; color:#000;">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Book an Event</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2"><strong id="bookCustomerInfo"></strong></div>
+          <div class="mb-3 text-muted small" id="bookEventInfo"></div>
+
+          <label class="form-label fw-semibold">Enter Card Number</label>
+          <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+          <div class="form-text">Enter 16 digit card number.</div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-success" type="button" onclick="confirmBooking()">Confirm Booking</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Food Menu Modal -->
+  <div class="modal fade" id="foodMenuModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="border-radius:18px;">
+        <div class="modal-header text-dark">
+          <h5 class="modal-title fw-bold">Food Menu</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-dark">
+          <div class="row">
+            <div class="col-md-6">
+              <h6>Starters</h6>
+              <div><input type="checkbox" onchange="updateMenuTotal(event, 30)"> Vada - ₹30</div>
+              <div><input type="checkbox" onchange="updateMenuTotal(event, 15)"> Mirchi Bhajji - ₹15</div>
+              <div><input type="checkbox" onchange="updateMenuTotal(event, 20)"> Samosa - ₹20</div>
+            </div>
+
+            <div class="col-md-6">
+              <h6>Main Course</h6>
+              <div><input type="checkbox" onchange="updateMenuTotal(event, 30)"> Pulihora - ₹30</div>
+              <div><input type="checkbox" onchange="updateMenuTotal(event, 20)"> White Rice - ₹20</div>
+              <div><input type="checkbox" onchange="updateMenuTotal(event, 30)"> Tomato Pappu - ₹30</div>
+            </div>
+          </div>
+
+          <hr>
+          <div class="fw-bold">Menu Cost Per Guest: ₹<span id="menuTotal">0</span></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" data-bs-dismiss="modal">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+  function confirmBooking(){ _apiBookEvent(); }
+  function bookEvent(){ _apiBookEvent(); }
+  
+  function _apiBookEvent() {
+      const _guests = parseInt(document.getElementById("guests")?.value || document.getElementById("guestCount")?.value || "50");
+      const _totalText = document.getElementById("sumRuleTotal")?.textContent || document.getElementById("grandTotal")?.textContent || "0";
+      const _total = parseInt(_totalText.replace(/\D/g, '')) || 0;
+      const _eventDate = document.getElementById("eventDate")?.value || new Date().toISOString().split('T')[0];
+      const _custName = document.getElementById("custName")?.value || "Customer";
+      
+      fetch('/api/create-budget-booking/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+              event_name: document.title.split(' ')[0] + ' Event For ' + _custName,
+              event_date: _eventDate,
+              guest_count: _guests,
+              budget_estimate: _total
+          })
+      }).then(r => r.json()).then(d => {
+          if(d.success) {
+              window.location.href = '/checkout/' + d.booking_id + '/';
+          } else {
+              alert("Error: " + d.error);
+          }
+      });
+  }
+
+    const ITEMS = [
+      {
+        id:'bridegroom',
+        name:'Bride/Groom To Be',
+        type:'fixed',
+        prices:{ simple:1500, basic:4000, luxury:8000 },
+        icon:'💍',
+        hasDecor:true
+      },
+      {
+        id:'haldi',
+        name:'Haldi Ceremony',
+        type:'fixed',
+        prices:{ simple:2000, basic:4000, luxury:8000 },
+        icon:'🌼',
+        hasDecor:true
+      },
+      {
+        id:'sangeeth',
+        name:'Sangeeth Night',
+        type:'fixed',
+        prices:{ simple:4000, basic:7000, luxury:10000 },
+        icon:'🎶',
+        hasDecor:true
+      },
+      {
+        id:'mehendi',
+        name:'Mehendi Ceremony',
+        type:'fixed',
+        prices:{ simple:2000, basic:4000, luxury:8000 },
+        icon:'🖌️',
+        hasDecor:true
+      },
+      {
+        id:'wedding',
+        name:'Wedding (Main)',
+        type:'fixed',
+        prices:{ simple:10000, basic:25000, luxury:98000 },
+        icon:'🕉️',
+        hasDecor:true
+      },
+      {
+        id:'food',
+        name:'Food / Catering',
+        type:'perGuest',
+        prices:{ simple:200, basic:400, luxury:600 },
+        icon:'🍽️',
+        hasDecor:false
+      },
+      {
+        id:'band',
+        name:'Band / Music',
+        type:'fixed',
+        prices:{ simple:10000, basic:20000, luxury:30000 },
+        icon:'🥁',
+        hasDecor:false
+      },
+      {
+        id:'makeup',
+        name:'Makeup',
+        type:'fixed',
+        prices:{ simple:10000, basic:20000, luxury:30000 },
+        icon:'💄',
+        hasDecor:false
+      },
+      {
+        id:'photo',
+        name:'Photography',
+        type:'fixed',
+        prices:{ simple:20000, basic:30000, luxury:50000 },
+        icon:'📸',
+        hasDecor:false
+      }
+    ];
+
+    const PACKAGES = {
+      simple: { label:'Simple' },
+      basic:  { label:'Basic'  },
+      luxury: { label:'Luxury' }
+    };
+
+    const LOCATION_MULT = {
+      tier2: 1.00,
+      metro: 1.12,
+      rural: 0.93,
+      premium: 1.20
+    };
+
+    const FUNCTION_DECORATIONS = {
+      bridegroom: {
+        simple: [
+          { id: "bg_simple_1", name: "Bride to Be Floral Curtain Backdrop", desc: "Bright yellow curtain backdrop with bride-to-be foil balloons and floral hanging décor for a cheerful pre-wedding celebration.", extra: 0, image: "{% static 'sbride5.jpg' %}" },
+          { id: "bg_simple_2", name: "Bride to Be Balloon Backdrop", desc: "Elegant backdrop decoration with pastel balloons and soft color theme for bride-to-be celebration photos.", extra: 400, image: "{% static 'sbride.jpg' %}" },
+          { id: "bg_simple_3", name: "Bride to Be Light Curtain Decor", desc: "Soft white curtain backdrop with warm lighting and balloon styling creating a beautiful photo spot for the bride-to-be event.", extra: 500, image: "{% static 'sbride2.jpg' %}" },
+          { id: "bg_simple_4", name: "Bride to Be Balloon Ring Decor", desc: "Outdoor circular ring frame decorated with pastel balloons and neon bride-to-be sign for stylish pre-wedding photos.", extra: 1000, image: "{% static 'sbride4.jpg' %}" }
+        ],
+        basic: [
+          { id: "bg_basic_1", name: "Bride To Be Balloon Wall Setup", desc: "Green backdrop wall with bride-to-be lettering and balloon decoration for stylish celebration photos.", extra: 0, image: "{% static 'bbride3.jpg' %}" },
+          { id: "bg_basic_2", name: "Elegant Floral Stage Setup", desc: "Red curtain backdrop with heart balloons creating a decoration theme for the bride-to-be event.", extra: 2000, image: "{% static 'bbride4.jpg' %}" },
+          { id: "bg_basic_3", name: "Bride To Be Light Curtain Decor", desc: "White curtain backdrop with hanging fairy lights and elegant table setup for a beautiful celebration space.", extra: 100, image: "{% static 'bbride5.jpg' %}" },
+          { id: "bg_basic_6", name: "Elegant Floral Stage Setup", desc: "Premium stage decoration with floral arrangements, lights, and elegant backdrop styling.", extra: 4000, image: "{% static 'bbride6.jpg' %}" }
+        ],
+        luxury: [
+          { id: "bg_lux_1", name: "Bride To Be Fairy Light Ring Setup", desc: "Rooftop celebration setup with a pastel balloon ring backdrop, hanging fairy lights canopy, and cozy seating arrangement for elegant bride-to-be photos.", extra: 0, image: "{% static 'lbride1.jpg' %}" },
+          { id: "bg_lux_2", name: "Luxury Garden Wedding Setup", desc: "Elegant outdoor wedding setup with white drapes, floral arrangements, and chandelier lighting.", extra: 60000, image: "{% static 'lbride2.jpg' %}" },
+          { id: "bg_lux_3", name: "Luxury Floral Couple Stage", desc: "Premium couple stage with hanging flowers and romantic lighting decor.", extra: 50000, image: "{% static 'lbride4.jpg' %}" }
+        ]
+      },
+
+      haldi: {
+        simple: [
+          { id: "haldi_simple_1", name: "Traditional Yellow Haldi Decor", desc: "Bright yellow curtain backdrop with colorful hanging ornaments and seating arrangement for a vibrant haldi celebration.", extra: 0, image: "{% static 'shaldi2.jpg' %}" },
+          { id: "haldi_simple_2", name: "Floral Haldi Backdrop", desc: "Green grass backdrop decorated with marigold garlands and hanging floral elements for a traditional haldi ceremony setup.", extra: 200, image: "{% static 'shaldi6.jpg' %}" },
+          { id: "haldi_simple_3", name: "Classic Haldi Stage Setup", desc: "Yellow floral backdrop with haldi lettering and decorative flower stands creating a beautiful haldi ceremony stage.", extra: 1000, image: "{% static 'shaldi1.jpg' %}" },
+          { id: "haldi_simple_4", name: "Banana Leaf Haldi Backdrop", desc: "Traditional banana leaf decoration with marigold flowers and hanging garlands for a natural haldi ceremony theme.", extra: 300, image: "{% static 'shaldi4.jpg' %}" }
+        ],
+        basic: [
+          { id: "haldi_basic_1", name: "Marigold Ring Haldi Setup", desc: "Beautiful circular marigold flower backdrop with traditional seating arrangement for a vibrant haldi ceremony.", extra: 0, image: "{% static 'bhaldi4.jpg' %}" },
+          { id: "haldi_basic_2", name: "Elegant Haldi Curtain Decor", desc: "White and yellow curtain backdrop with hanging marigold flowers and floral accents for a premium haldi setup.", extra: 4500, image: "{% static 'bhaldi6.jpg' %}" },
+          { id: "haldi_basic_3", name: "Royal Haldi Stage Decor", desc: "Traditional haldi stage with floral pillars and decorative seating creating a grand ceremony look.", extra: 6000, image: "{% static 'bhaldi1.jpg' %}" },
+          { id: "haldi_basic_4", name: "Designer Haldi Backdrop", desc: "Bright yellow haldi backdrop with decorative patterns and floral arrangements for a festive celebration.", extra: 4000, image: "{% static 'bhaldi2.jpg' %}" }
+        ],
+        luxury: [
+          { id: "haldi_lux_1", name: "Grand Marigold Haldi Stage", desc: "Lavish haldi stage decorated with cascading marigold flowers and bright yellow drapes creating a royal ceremony setup.", extra: 0, image: "{% static 'lhaldi3.jpg' %}" },
+          { id: "haldi_lux_2", name: "Royal Haldi Pavilion Setup", desc: "Luxury haldi pavilion with yellow drapes, floral canopy and elegant seating for a premium celebration experience.", extra: 5000, image: "{% static 'lhaldi6.jpg' %}" },
+          { id: "haldi_lux_3", name: "Luxury Haldi Lounge Decor", desc: "Beautiful haldi lounge with floral arrangements, cozy seating and warm lighting for a grand haldi celebration.", extra: 10000, image: "{% static 'lhaldi8.jpg' %}" },
+          { id: "haldi_lux_4", name: "Designer Haldi Floral Backdrop", desc: "Premium floral backdrop with decorative elements and traditional haldi seating setup for a luxury ceremony look.", extra: 12000, image: "{% static 'lhaldi9.jpg' %}" }
+        ]
+      },
+
+      sangeeth: {
+        simple: [
+          { id: "sangeeth_simple_1", name: "Music Night Curtain Stage", desc: "Colorful curtain backdrop with stage lighting designed for a simple sangeeth or music night performance.", extra: 0, image: "{% static 'ssangeeth1.jpg' %}" },
+          { id: "sangeeth_simple_2", name: "LED Dance Floor Setup", desc: "Bright LED dance floor with colorful lighting creating an energetic atmosphere for sangeeth dance performances.", extra: 1000, image: "{% static 'ssangeeth2.jpg' %}" }
+        ],
+        basic: [
+          { id: "sang_basic_2", name: "Designer Dance Floor Upgrade", desc: "Stylish performance setup with enhanced lights and decor.", extra: 0, image: "{% static 'bsangeeth2.jpg' %}" },
+          { id: "sang_basic_1", name: "Elegant Sangeeth Stage", desc: "Included decorative lights with family performance stage.", extra: 2000, image: "{% static 'bsangeeth1.jpg' %}" },
+          { id: "sang_basic_3", name: "Designer Dance Floor Upgrade", desc: "Stylish performance setup with enhanced lights and decor.", extra: 5000, image: "{% static 'bsangeeth3.jpg' %}" }
+        ],
+        luxury: [
+          { id: "sangeeth_lux_1", name: "Luxury Sangeeth Performance Stage", desc: "Grand sangeeth stage with LED backdrop, floral arches and premium lighting setup for spectacular dance performances.", extra: 0, image: "{% static 'lsangeeth1.jpg' %}" },
+          { id: "sangeeth_lux_2", name: "Royal Blue Concert Stage", desc: "Elegant concert-style stage with deep blue lighting, hanging fairy lights and premium sound setup for a luxury sangeeth night.", extra: 15000, image: "{% static 'lsangeeth2.jpg' %}" },
+          { id: "sangeeth_lux_3", name: "Crystal Light Dance Stage", desc: "Decorative stage with crystal hanging lights, floral ceiling décor and stylish arches for a glamorous sangeeth celebration.", extra: 18000, image: "{% static 'lsangeeth3.jpg' %}" },
+          { id: "sangeeth_lux_4", name: "Grand Concert Fire Stage", desc: "High-energy concert style stage with dramatic lighting, LED visuals and fire effects for an unforgettable sangeeth show.", extra: 20000, image: "{% static 'lsangeeth4.jpg' %}" }
+        ]
+      },
+
+      mehendi: {
+        simple: [
+          { id: "meh_simple_1", name: "Standard Mehendi Seating", desc: "Included traditional seating with soft floral style.", extra: 0, image: "{% static 'smehandi1.jpg' %}" },
+          { id: "meh_simple_2", name: "Mehendi Corner Upgrade", desc: "Compact mehendi setup with better colors and styling.", extra: 500, image: "{% static 'smehandi2.jpg' %}" }
+        ],
+        basic: [
+          { id: "mehendi_basic_1", name: "Colorful Mehendi Cushion Setup", desc: "Vibrant backdrop with colorful curtains, fairy lights and traditional floor seating for a festive mehendi celebration.", extra: 0, image: "{% static 'bmehandi1.jpg' %}" },
+          { id: "mehendi_basic_2", name: "Designer Mehendi Lounge Decor", desc: "Yellow and white mehendi backdrop with decorative hanging ornaments and elegant seating arrangement.", extra: 2000, image: "{% static 'bmehandi2.jpg' %}" },
+          { id: "mehendi_basic_3", name: "Traditional Mehendi Hanging Decor", desc: "Bright yellow mehendi backdrop decorated with traditional hanging ornaments and festive floral elements.", extra: 3000, image: "{% static 'bmehandi3.jpg' %}" },
+          { id: "mehendi_basic_4", name: "Elegant Mehendi Stage Setup", desc: "Stylish mehendi stage with yellow drapes, floral decorations and comfortable seating for the bride.", extra: 5000, image: "{% static 'bmehandi4.jpg' %}" }
+        ],
+        luxury: [
+          { id: "meh_lux_1", name: "Luxury Mehendi Setup", desc: "Included vibrant premium mehendi function styling.", extra: 0, image: "{% static 'lmehandi2.jpg' %}" },
+          { id: "meh_lux_2", name: "Royal Mehendi Decor Upgrade", desc: "Lavish colorful decor with premium seating and styling.", extra: 12000, image: "{% static 'lmehandi4.jpg' %}" }
+        ]
+      },
+
+      wedding: {
+        simple: [
+          { id: "wed_simple_1", name: "Standard Floral Mandap", desc: "Included minimal wedding mandap setup.", extra: 0, image: "{% static 'swed1.jpg' %}" },
+          { id: "wed_simple_2", name: "Classic Wedding Stage Upgrade", desc: "Traditional mandap with better decor and neat styling.", extra: 8000, image: "{% static 'swed2.jpg' %}" },
+          { id: "wed_simple_3", name: "Classic Wedding Stage Upgrade", desc: "Traditional mandap with better decor and neat styling.", extra: 8000, image: "{% static 'swed3.jpg' %}" },
+          { id: "wed_simple_4", name: "Classic Wedding Stage Upgrade", desc: "Traditional mandap with better decor and neat styling.", extra: 8000, image: "{% static 'swed4.jpg' %}" }
+        ],
+        basic: [
+          { id: "wed_basic_1", name: "Elegant Wedding Mandap", desc: "Included balanced premium wedding decor.", extra: 0, image: "{% static 'bwed1.jpg' %}" },
+          { id: "wed_basic_2", name: "Classic Gold Wedding Upgrade", desc: "Rich floral and lighting arrangements with premium finish.", extra: 12000, image: "{% static 'bwed2.jpg' %}" },
+          { id: "wed_basic_3", name: "Classic Gold Wedding Upgrade", desc: "Rich floral and lighting arrangements with premium finish.", extra: 12000, image: "{% static 'bwed3.jpg' %}" },
+          { id: "wed_basic_4", name: "Classic Gold Wedding Upgrade", desc: "Rich floral and lighting arrangements with premium finish.", extra: 12000, image: "{% static 'bwed4.jpg' %}" }
+        ],
+        luxury: [
+          { id: "wed_lux_1", name: "Royal Wedding Mandap", desc: "Included grand luxury wedding stage decor.", extra: 0, image: "{% static 'lwed1.jpg' %}" },
+          { id: "wed_lux_2", name: "Luxury Palace Theme Upgrade", desc: "Premium floral and royal mandap styling with lavish finish.", extra: 20000, image: "{% static 'lwed2.jpg' %}" },
+          { id: "wed_lux_3", name: "Luxury Palace Theme Upgrade", desc: "Premium floral and royal mandap styling with lavish finish.", extra: 20000, image: "{% static 'lwed3.jpg' %}" },
+          { id: "wed_lux_4", name: "Luxury Palace Theme Upgrade", desc: "Premium floral and royal mandap styling with lavish finish.", extra: 20000, image: "{% static 'lwed4.jpg' %}" }
+        ]
+      },
+
+      food: {
+        simple: [
+          { id: "food_simple_1", name: "Standard Buffet Setup", desc: "Basic buffet tables with simple decoration.", extra: 0, image: "{% static 'sfood1.jpg' %}" },
+          { id: "food_simple_2", name: "Buffet Decor Upgrade", desc: "Better buffet counters with lights and flowers.", extra: 4000, image: "{% static 'sfood2.jpg' %}" }
+        ],
+        basic: [
+          { id: "food_basic_1", name: "Elegant Dining Setup", desc: "Standard decorated dining tables.", extra: 0, image: "{% static 'bfood1.jpg' %}" },
+          { id: "food_basic_2", name: "Premium Buffet Decor", desc: "Decorated buffet counters with floral setup.", extra: 7000, image: "{% static 'bfood2.jpg' %}" }
+        ],
+        luxury: [
+          { id: "food_lux_1", name: "Luxury Dining Layout", desc: "Included luxury dining arrangement.", extra: 0, image: "{% static 'lfood2.jpg' %}" },
+          { id: "food_lux_2", name: "Royal Buffet Decoration", desc: "Premium buffet decor with lighting and flowers.", extra: 12000, image: "{% static 'lfood3.jpg' %}" },
+          { id: "food_lux_3", name: "Royal Buffet Decoration", desc: "Premium buffet decor with lighting and flowers.", extra: 12000, image: "{% static 'lfood4.jpg' %}" }
+        ]
+      }
+    };
+
+    let selectedPkg = "simple";
+    let menuCostPerGuest = 0;
+    const selected = new Set();
+    const selectedDecorations = {};
+
+    function formatDateLocal(dateObj){
+      const year = dateObj.getFullYear();
+      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const day = String(dateObj.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function getTomorrowDateString(){
+      const tomorrow = new Date();
+      tomorrow.setHours(0,0,0,0);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      return formatDateLocal(tomorrow);
+    }
+
+    function setTomorrowMinDate(){
+      const dateInput = document.getElementById("eventDate");
+      if(dateInput){
+        dateInput.min = getTomorrowDateString();
+      }
+    }
+
+    function openFoodMenu(){
+      const modal = new bootstrap.Modal(document.getElementById("foodMenuModal"));
+      modal.show();
+    }
+
+    function updateMenuTotal(e, price){
+      const checkbox = e.target;
+
+      if(checkbox.checked){
+        menuCostPerGuest += price;
+      } else {
+        menuCostPerGuest -= price;
+      }
+
+      if(menuCostPerGuest < 0){
+        menuCostPerGuest = 0;
+      }
+
+      document.getElementById("menuTotal").textContent = menuCostPerGuest;
+
+      const foodChk = document.getElementById("chk-food");
+
+      if(menuCostPerGuest > 0){
+        if(foodChk) foodChk.checked = true;
+        selected.add("food");
+      } else {
+        if(foodChk) foodChk.checked = false;
+        selected.delete("food");
+      }
+
+      renderItems();
+      recalculate();
+    }
+
+    function formatINR(n){
+      return "₹" + Math.round(n).toLocaleString("en-IN");
+    }
+
+    function getPackagePrice(item){
+      return item.prices[selectedPkg];
+    }
+
+    function getDecorationsForService(serviceId){
+      return FUNCTION_DECORATIONS[serviceId]?.[selectedPkg] || [];
+    }
+
+    function getSelectedDecorForService(serviceId){
+      const decorId = selectedDecorations[serviceId];
+      if(!decorId) return null;
+      return getDecorationsForService(serviceId).find(d => d.id === decorId) || null;
+    }
+
+    function getDecorEnabledServices(){
+      return ITEMS.filter(item => item.hasDecor && selected.has(item.id));
+    }
+
+    function getTotalDecorationCost(){
+      let total = 0;
+      getDecorEnabledServices().forEach(service=>{
+        const decor = getSelectedDecorForService(service.id);
+        if(decor) total += (decor.extra || 0);
+      });
+      return total;
+    }
+
+    function renderItems(){
+      const area = document.getElementById("itemsArea");
+      area.innerHTML = "";
+
+      ITEMS.forEach(item=>{
+        const unitPrice = (item.id === "food" && menuCostPerGuest > 0)
+          ? menuCostPerGuest
+          : getPackagePrice(item);
+
+        const baseLine = (item.type === "perGuest")
+          ? `<div class="muted small" id="base-${item.id}">Base: ${formatINR(unitPrice)} / guest</div>`
+          : `<div class="muted small" id="base-${item.id}">Base: ${formatINR(unitPrice)}</div>`;
+
+        const extraInfo = item.id === "food"
+          ? `<button class="btn btn-sm btn-success mt-2" type="button" onclick="openFoodMenu()">Select Menu</button>`
+          : (item.hasDecor ? `<div class="small text-primary mt-1">Decoration can be selected</div>` : ``);
+
+        const checkedAttr = selected.has(item.id) ? "checked" : "";
+
+        const col = document.createElement("div");
+        col.className = "col-md-6";
+
+        col.innerHTML = `
+          <div class="item-card p-3">
+            <div class="d-flex align-items-start justify-content-between gap-2">
+              <div>
+                <div class="fw-bold">${item.icon} ${item.name}</div>
+                ${baseLine}
+                <div class="muted small">Selected cost: <span class="fw-semibold" id="cost-${item.id}">—</span></div>
+                ${extraInfo}
+              </div>
+
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="chk-${item.id}" ${checkedAttr}
+                  onchange="toggleItem('${item.id}', this.checked)">
+              </div>
+            </div>
+          </div>
+        `;
+        area.appendChild(col);
+      });
+    }
+
+    function updateBasePricesUI(){
+      ITEMS.forEach(item=>{
+        const baseEl = document.getElementById("base-" + item.id);
+        if(!baseEl) return;
+
+        const unitPrice = (item.id === "food" && menuCostPerGuest > 0)
+          ? menuCostPerGuest
+          : getPackagePrice(item);
+
+        if(item.type === "perGuest"){
+          baseEl.textContent = `Base: ${formatINR(unitPrice)} / guest`;
+        } else {
+          baseEl.textContent = `Base: ${formatINR(unitPrice)}`;
+        }
+      });
+    }
+
+    function renderFunctionDecorations(){
+      const wrap = document.getElementById("decorationsContainer");
+      wrap.innerHTML = "";
+
+      const decorServices = getDecorEnabledServices();
+
+      if(decorServices.length === 0){
+        wrap.innerHTML = `
+          <div class="empty-note">
+            <div class="fw-semibold mb-1">No function selected for decoration</div>
+          </div>
+        `;
+        return;
+      }
+
+      decorServices.forEach(service=>{
+        const decorations = getDecorationsForService(service.id);
+        const selectedDecorId = selectedDecorations[service.id] || null;
+
+        const section = document.createElement("div");
+        section.className = "decor-group mb-4";
+
+        let cards = `<div class="row g-3">`;
+
+        decorations.forEach(decor=>{
+          const isSelected = selectedDecorId === decor.id;
+
+          cards += `
+            <div class="col-md-6">
+              <div class="decor-card ${isSelected ? 'selected' : ''}" onclick="selectDecoration('${service.id}', '${decor.id}')">
+                <img src="${decor.image}" alt="${decor.name}">
+                <div class="decor-body">
+                  <div class="d-flex justify-content-between align-items-start gap-2">
+                    <div>
+                      <div class="fw-bold">${decor.name}</div>
+                      <div class="muted small mt-1">${decor.desc}</div>
+                    </div>
+                    <span class="badge text-bg-light decor-badge">${PACKAGES[selectedPkg].label}</span>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                      <div class="muted small">Extra Decor Cost</div>
+                      <div class="fw-bold">${formatINR(decor.extra || 0)}</div>
+                    </div>
+                    <div class="${isSelected ? 'selected-mark' : 'muted small'}">
+                      ${isSelected ? 'Selected ✓' : 'Click to Select'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        cards += `</div>`;
+
+        const chosenDecor = getSelectedDecorForService(service.id);
+
+        section.innerHTML = `
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+            <div>
+              <h5 class="fw-bold section-title mb-1">${service.icon} ${service.name} Decorations</h5>
+              <div class="muted small">Choose one decoration for this function.</div>
+            </div>
+            <div class="text-end">
+              <div class="fw-semibold">${chosenDecor ? chosenDecor.name : 'None'}</div>
+              <button class="btn btn-outline-secondary btn-sm mt-2" type="button" onclick="clearDecorationForService('${service.id}')">Clear</button>
+            </div>
+          </div>
+          ${cards}
+        `;
+
+        wrap.appendChild(section);
+      });
+    }
+
+    function selectDecoration(serviceId, decorId){
+      if(selectedDecorations[serviceId] === decorId){
+        delete selectedDecorations[serviceId];
+      } else {
+        selectedDecorations[serviceId] = decorId;
+      }
+      renderFunctionDecorations();
+      recalculate();
+    }
+
+    function clearDecorationForService(serviceId){
+      delete selectedDecorations[serviceId];
+      renderFunctionDecorations();
+      recalculate();
+    }
+
+    function clearAllDecorations(){
+      Object.keys(selectedDecorations).forEach(k => delete selectedDecorations[k]);
+      renderFunctionDecorations();
+      recalculate();
+    }
+
+    function selectPackage(pkg){
+      selectedPkg = pkg;
+
+      document.querySelectorAll(".pkg-card").forEach(card=>{
+        const active = card.getAttribute("data-pkg") === pkg;
+        card.classList.toggle("active", active);
+        const radio = card.querySelector('input[type="radio"]');
+        if(radio) radio.checked = active;
+      });
+
+      document.getElementById("pkgMultText").textContent = PACKAGES[pkg].label;
+
+      updateBasePricesUI();
+      renderFunctionDecorations();
+      recalculate();
+    }
+
+    function toggleItem(id, on){
+      if(id === "food" && on && menuCostPerGuest <= 0){
+        alert("Please select food menu first");
+        const foodChk = document.getElementById("chk-food");
+        if(foodChk) foodChk.checked = false;
+        return;
+      }
+
+      if(on){
+        selected.add(id);
+      } else {
+        selected.delete(id);
+        delete selectedDecorations[id];
+      }
+
+      renderFunctionDecorations();
+      recalculate();
+    }
+
+    function selectAll(on){
+      ITEMS.forEach(it=>{
+        const chk = document.getElementById("chk-" + it.id);
+        if(chk) chk.checked = on;
+
+        if(on){
+          if(it.id === "food" && menuCostPerGuest <= 0){
+            if(chk) chk.checked = false;
+            selected.delete(it.id);
+          } else {
+            selected.add(it.id);
+          }
+        } else {
+          selected.delete(it.id);
+          delete selectedDecorations[it.id];
+        }
+      });
+      renderFunctionDecorations();
+      recalculate();
+    }
+
+    function resetAll(){
+      selected.clear();
+      Object.keys(selectedDecorations).forEach(k => delete selectedDecorations[k]);
+
+      document.getElementById("custName").value = "";
+      document.getElementById("custPhone").value = "";
+      document.getElementById("eventDate").value = "";
+      document.getElementById("eventTime").value = "";
+
+      document.getElementById("guests").value = 200;
+      document.getElementById("location").value = "tier2";
+      document.getElementById("menuTotal").textContent = "0";
+      menuCostPerGuest = 0;
+
+      ITEMS.forEach(it=>{
+        const chk = document.getElementById("chk-" + it.id);
+        if(chk) chk.checked = false;
+
+        const costEl = document.getElementById("cost-" + it.id);
+        if(costEl) costEl.textContent = "—";
+      });
+
+      document.querySelectorAll("#foodMenuModal input[type='checkbox']").forEach(cb => cb.checked = false);
+
+      selectPackage("simple");
+      renderItems();
+      renderFunctionDecorations();
+      setTomorrowMinDate();
+      recalculate();
+    }
+
+    async function recalculate(){
+      const guests = Math.max(0, parseInt(document.getElementById("guests").value || "0", 10));
+      const locKey = document.getElementById("location").value;
+      const locMult = LOCATION_MULT[locKey] ?? 1.00;
+      const decorCost = getTotalDecorationCost();
+
+      document.getElementById("locMultText").textContent = locMult.toFixed(2) + "x";
+      document.getElementById("decorCostText").textContent = formatINR(decorCost);
+
+      let sumBase = 0;
+      const breakdown = [];
+
+      ITEMS.forEach(item=>{
+        const costSpan = document.getElementById("cost-" + item.id);
+
+        if(!selected.has(item.id)){
+          if(costSpan) costSpan.textContent = "—";
+          return;
+        }
+
+        const unitPrice = (item.id === "food")
+          ? menuCostPerGuest
+          : getPackagePrice(item);
+
+        const itemCost = (item.type === "perGuest") ? unitPrice * guests : unitPrice;
+
+        sumBase += itemCost;
+        if(costSpan) costSpan.textContent = formatINR(itemCost);
+        breakdown.push({ name:item.name, cost:itemCost });
+      });
+
+      getDecorEnabledServices().forEach(service=>{
+        const decor = getSelectedDecorForService(service.id);
+        if(decor){
+          breakdown.push({
+            name:`${service.name} Decoration - ${decor.name}`,
+            cost:decor.extra
+          });
+        }
+      });
+
+      document.getElementById("selCount").textContent = `${selected.size} Selected`;
+
+      const body = document.getElementById("breakdownBody");
+      body.innerHTML = "";
+
+      if(breakdown.length === 0){
+        body.innerHTML = `<tr><td class="muted small" colspan="2">No items selected.</td></tr>`;
+        document.getElementById("totalText").textContent = "₹0";
+        document.getElementById("totalHint").textContent = "Select items and decorations to estimate budget";
+        document.getElementById("mlText").textContent = "₹0";
+        return;
+      }
+
+      breakdown.sort((a,b)=>b.cost-a.cost).forEach(row=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="muted small">${row.name}</td>
+          <td class="text-end fw-semibold">${formatINR(row.cost)}</td>
+        `;
+        body.appendChild(tr);
+      });
+
+      const ruleTotal = (sumBase + decorCost) * locMult;
+
+      document.getElementById("totalText").textContent = formatINR(ruleTotal);
+      document.getElementById("totalHint").textContent =
+        `Total = (Services + All Decorations) × Location Multiplier (${locMult.toFixed(2)}x)`;
+
+      document.getElementById("mlText").textContent = formatINR(ruleTotal);
+    }
+
+    function validateCustomerDetails(){
+      const name = document.getElementById("custName").value.trim();
+      const phone = document.getElementById("custPhone").value.trim();
+      const eventDate = document.getElementById("eventDate").value;
+      const eventTime = document.getElementById("eventTime").value;
+
+      if(!name || !phone || !eventDate || !eventTime){
+        alert("Please enter Customer Name, Phone Number, Date of Event and Time of Event");
+        return false;
+      }
+
+      const minAllowedDate = getTomorrowDateString();
+
+      if(eventDate < minAllowedDate){
+        alert("Please select tomorrow or a future date only");
+        document.getElementById("eventDate").focus();
+        return false;
+      }
+
+      return true;
+    }
+
+    async function openSummary(){
+      if(!validateCustomerDetails()) return;
+
+      const guests = Math.max(0, parseInt(document.getElementById("guests").value || "0", 10));
+      const locKey = document.getElementById("location").value;
+      const locMult = LOCATION_MULT[locKey] ?? 1.00;
+      const decorCost = getTotalDecorationCost();
+
+      const custName = document.getElementById("custName").value.trim();
+      const custPhone = document.getElementById("custPhone").value.trim();
+      const eventDate = document.getElementById("eventDate").value;
+      const eventTime = document.getElementById("eventTime").value;
+
+      let sumBase = 0;
+      const chosen = [];
+
+      ITEMS.forEach(item=>{
+        if(!selected.has(item.id)) return;
+
+        const unitPrice = (item.id === "food" && menuCostPerGuest > 0)
+          ? menuCostPerGuest
+          : getPackagePrice(item);
+
+        const itemCost = (item.type === "perGuest") ? unitPrice * guests : unitPrice;
+
+        chosen.push(`${item.name} - ${formatINR(itemCost)}`);
+        sumBase += itemCost;
+      });
+
+      getDecorEnabledServices().forEach(service=>{
+        const decor = getSelectedDecorForService(service.id);
+        if(decor){
+          chosen.push(`${service.name} Decoration: ${decor.name} - ${formatINR(decor.extra)}`);
+        }
+      });
+
+      const ruleTotal = (sumBase + decorCost) * locMult;
+
+      document.getElementById("sumName").textContent = custName || "-";
+      document.getElementById("sumPhone").textContent = custPhone || "-";
+      document.getElementById("sumDate").textContent = eventDate || "-";
+      document.getElementById("sumTime").textContent = eventTime || "-";
+      document.getElementById("sumPkg").textContent = PACKAGES[selectedPkg].label;
+      document.getElementById("sumGuests").textContent = guests.toLocaleString("en-IN");
+      document.getElementById("sumLoc").textContent = `${locKey.toUpperCase()} (${locMult.toFixed(2)}x)`;
+      document.getElementById("sumRuleTotal").textContent = formatINR(ruleTotal);
+      document.getElementById("sumMlTotal").textContent = formatINR(ruleTotal);
+
+      const ul = document.getElementById("sumItems");
+      ul.innerHTML = "";
+
+      if(chosen.length === 0){
+        ul.innerHTML = `<li class="muted">No items selected.</li>`;
+      } else {
+        chosen.forEach(x=>{
+          const li = document.createElement("li");
+          li.textContent = x;
+          ul.appendChild(li);
+        });
+      }
+
+      const modal = new bootstrap.Modal(document.getElementById("sumModal"));
+      modal.show();
+    }
+
+    function openBookingModal(){
+      if(!validateCustomerDetails()) return;
+
+      const summaryModalEl = document.getElementById("sumModal");
+      const summaryModal = bootstrap.Modal.getInstance(summaryModalEl);
+      if(summaryModal){
+        summaryModal.hide();
+      }
+
+      document.getElementById("cardNumber").value = "";
+
+      const custName = document.getElementById("custName").value.trim();
+      const custPhone = document.getElementById("custPhone").value.trim();
+      const eventDate = document.getElementById("eventDate").value;
+      const eventTime = document.getElementById("eventTime").value;
+
+      document.getElementById("bookCustomerInfo").textContent = `${custName} (${custPhone})`;
+      document.getElementById("bookEventInfo").textContent = `Event Date: ${eventDate} | Event Time: ${eventTime}`;
+
+      setTimeout(() => {
+        const bookingModal = new bootstrap.Modal(document.getElementById("bookingModal"));
+        bookingModal.show();
+      }, 300);
+    }
+
+    function old_confirmBooking(){}
+
+    setTomorrowMinDate();
+    renderItems();
+    renderFunctionDecorations();
+    recalculate();
+  </script>
+</body>
+</html>

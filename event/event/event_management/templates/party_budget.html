@@ -1,0 +1,691 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Private Party Budget Estimator</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --brand:#0d6efd;
+      --bg:#0b1220;
+      --card:#ffffff;
+      --muted:#64748b;
+      --ink:#0f172a;
+      --ring: rgba(13,110,253,.18);
+    }
+
+    /* FULL PAGE BACKGROUND IMAGE */
+    body{
+      min-height: 100vh;
+      background:
+        linear-gradient(rgba(11,18,32,.78), rgba(11,18,32,.78)),
+        url("{% static 'party_background.jpg' %}");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    .top-wrap{ padding: 28px 0 40px; }
+
+    .glass{
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.25);
+    }
+
+    .soft-card{
+      background: rgba(255,255,255,.96);
+      color: var(--ink);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 18px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.18);
+    }
+
+    .muted{ color: var(--muted); }
+
+    .pkg-card{
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.12);
+      background:#fff;
+      cursor:pointer;
+      transition: .2s ease;
+    }
+    .pkg-card:hover{ transform: translateY(-2px); box-shadow: 0 16px 40px rgba(15,23,42,.10); }
+    .pkg-card.active{
+      border-color: rgba(13,110,253,.55);
+      box-shadow: 0 0 0 6px var(--ring);
+    }
+
+    .item-card{
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.10);
+      background:#fff;
+      transition: .2s ease;
+    }
+    .item-card:hover{ transform: translateY(-2px); box-shadow: 0 12px 26px rgba(15,23,42,.08); }
+
+    .price{ font-weight: 900; letter-spacing: .2px; }
+
+    .gallery img{
+      width: 100%;
+      height: 155px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,.12);
+    }
+
+    .sticky-side{ position: sticky; top: 18px; }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      padding:.35rem .7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color: rgba(255,255,255,.85);
+      font-size: .9rem;
+    }
+
+    .form-check-input:checked{
+      background-color: var(--brand);
+      border-color: var(--brand);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-wrap">
+    <div class="container">
+
+      <!-- HEADER -->
+      <div class="glass p-4 p-lg-5 mb-4">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-8">
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <span class="chip">Private Parties • Budget Estimator</span>
+              <span class="chip">Selectable Services</span>
+              <span class="chip">Theme Gallery</span>
+            </div>
+
+            <h1 class="main-title display-5">Private Party Budget Estimation & Planning</h1>
+            <p class="mb-0" style="color:rgba(255,255,255,.78)">
+              Choose package, party type, select services, and get item-wise cost & total.
+            </p>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="glass p-3">
+              <div class="small" style="color:rgba(255,255,255,.75)">Currency</div>
+              <div class="h4 fw-bold mb-0">₹ INR</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN GRID -->
+      <div class="row g-4">
+
+        <!-- LEFT -->
+        <div class="col-lg-8">
+
+          <!-- PACKAGE -->
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <h4 class="fw-bold mb-1">Select Package</h4>
+                <div class="muted">Package affects overall pricing and theme quality.</div>
+              </div>
+              <div class="muted">Multiplier: <span class="fw-semibold" id="pkgMultText">1.00x</span></div>
+            </div>
+
+            <div class="row g-3 mt-2">
+              <div class="col-md-4">
+                <div class="pkg-card p-3 active" data-pkg="simple" onclick="selectPackage('simple')">
+                  <div class="d-flex justify-content-between">
+                    <div class="fw-bold">Simple</div>
+                    <input class="form-check-input" type="radio" name="pkg" checked>
+                  </div>
+                  <div class="muted small mt-1">Basic setup, standard vendors</div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="pkg-card p-3" data-pkg="classic" onclick="selectPackage('classic')">
+                  <div class="d-flex justify-content-between">
+                    <div class="fw-bold">Classic</div>
+                    <input class="form-check-input" type="radio" name="pkg">
+                  </div>
+                  <div class="muted small mt-1">Better decor, upgraded vendors</div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="pkg-card p-3" data-pkg="luxury" onclick="selectPackage('luxury')">
+                  <div class="d-flex justify-content-between">
+                    <div class="fw-bold">Luxury</div>
+                    <input class="form-check-input" type="radio" name="pkg">
+                  </div>
+                  <div class="muted small mt-1">Premium theme & top vendors</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- INPUTS -->
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <h4 class="fw-bold mb-1">Inputs (Guests, Party Type & Location)</h4>
+            <div class="muted mb-3">Guests affect food. Party type affects add-ons. Location affects overall pricing.</div>
+
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Guest Count</label>
+                <input type="number" class="form-control" id="guests" value="50" min="10" max="2000" oninput="recalculate()">
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Party Type</label>
+                <select class="form-select" id="partyType" onchange="recalculate()">
+                  <option value="birthday" selected>Birthday Party</option>
+                  <option value="anniversary">Anniversary Party</option>
+                  <option value="houseparty">House Party</option>
+                  <option value="kitty">Kitty Party</option>
+                  <option value="babyshower">Baby Shower</option>
+                  <option value="get_together">Friends Get-together</option>
+                </select>
+                <div class="muted small mt-1">Type multiplier: <span class="fw-semibold" id="typeMultText">1.00x</span></div>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Location</label>
+                <select class="form-select" id="location" onchange="recalculate()">
+                  <option value="tier2" selected>Tier-2 City / Town (Standard)</option>
+                  <option value="metro">Metro City (Higher)</option>
+                  <option value="rural">Rural Area (Lower)</option>
+                  <option value="premium">Premium Zone (High)</option>
+                </select>
+                <div class="muted small mt-1">Location multiplier: <span class="fw-semibold" id="locMultText">1.00x</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ITEMS -->
+          <div class="soft-card p-3 p-lg-4 mb-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <h4 class="fw-bold mb-1">Select Services</h4>
+                <div class="muted">Select what you need. Costs update instantly.</div>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" onclick="selectAll(true)">Select All</button>
+                <button class="btn btn-outline-secondary btn-sm" onclick="selectAll(false)">Clear</button>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row g-3" id="itemsArea"></div>
+          </div>
+
+          <!-- THEME GALLERY -->
+          <div class="soft-card p-3 p-lg-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <h4 class="fw-bold mb-1">Theme Gallery</h4>
+                <div class="muted">Images change based on package.</div>
+              </div>
+              <span class="badge text-bg-primary-subtle" id="galleryLabel">Simple</span>
+            </div>
+
+            <div class="row g-3 mt-2 gallery" id="galleryArea"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-4">
+          <div class="soft-card p-3 p-lg-4 sticky-side">
+            <div class="d-flex justify-content-between align-items-center">
+              <div></div>
+              <span class="badge text-bg-primary-subtle" id="selCount">0 Selected</span>
+            </div>
+
+            <div class="mt-3">
+              <div class="display-6 price mb-0" id="totalText">₹0</div>
+              <div class="muted small" id="totalHint">Select items to estimate budget</div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex justify-content-between">
+              <div class="muted small fw-semibold">ML Predicted Total</div>
+              <div class="fw-bold" id="mlText">₹0</div>
+            </div>
+
+            <hr>
+
+            <div class="muted small fw-semibold mb-2">Breakdown</div>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead>
+                  <tr class="muted small">
+                    <th>Item</th>
+                    <th class="text-end">Cost</th>
+                  </tr>
+                </thead>
+                <tbody id="breakdownBody">
+                  <tr><td class="muted small" colspan="2">No items selected.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <hr>
+
+            <button class="btn btn-primary w-100" onclick="openSummary()">View Summary</button>
+            <button class="btn btn-outline-dark w-100 mt-2" onclick="resetAll()">Reset</button>
+          </div>
+        </div>
+
+      </div><!-- row -->
+    </div><!-- container -->
+  </div><!-- top-wrap -->
+
+  <!-- SUMMARY MODAL -->
+  <div class="modal fade" id="sumModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="border-radius:18px;">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Private Party Budget Summary</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="soft-card p-3">
+                <div class="muted small">Package</div>
+                <div class="fw-bold" id="sumPkg"></div>
+
+                <div class="muted small mt-2">Party Type</div>
+                <div class="fw-bold" id="sumType"></div>
+
+                <div class="muted small mt-2">Guests</div>
+                <div class="fw-bold" id="sumGuests"></div>
+
+                <div class="muted small mt-2">Location</div>
+                <div class="fw-bold" id="sumLoc"></div>
+              </div>
+            </div>
+
+            <div class="col-md-8">
+              <div class="soft-card p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="muted small">Rule-Based Total</div>
+                    <div class="h3 fw-bold mb-0" id="sumRuleTotal"></div>
+                  </div>
+                  <div class="text-end">
+                    <div class="muted small">ML Predicted Total</div>
+                    <div class="h4 fw-bold mb-0" id="sumMlTotal"></div>
+                  </div>
+                </div>
+
+                <hr>
+                <div class="muted small fw-semibold mb-2">Selected Services</div>
+                <ul class="mb-0" id="sumItems"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          <button class="btn btn-primary" onclick="window.print()">Print</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // ===============================
+    // 1) Base Prices (RULE-BASED)
+    // ===============================
+    // Food is per-guest cost. Others are fixed.
+    const ITEMS = [
+      { id:'venue',     name:'Venue / Party Hall',     type:'fixed',    base: 25000, icon:'🏛️' },
+      { id:'decor',     name:'Decorations',            type:'fixed',    base: 18000, icon:'🎈' },
+      { id:'theme',     name:'Theme Setup',            type:'fixed',    base: 15000, icon:'🎭' },
+      { id:'food',      name:'Food / Catering',        type:'perGuest', base: 450,   icon:'🍽️' },
+      { id:'cake',      name:'Cake / Dessert Table',   type:'fixed',    base: 4500,  icon:'🍰' },
+      { id:'dj',        name:'DJ / Music',             type:'fixed',    base: 12000, icon:'🎧' },
+      { id:'host',      name:'Anchor / Host',          type:'fixed',    base: 8000,  icon:'🎤' },
+      { id:'photo',     name:'Photography',            type:'fixed',    base: 14000, icon:'📸' },
+      { id:'video',     name:'Videography',            type:'fixed',    base: 16000, icon:'🎥' },
+      { id:'games',     name:'Games / Entertainment',  type:'fixed',    base: 9000,  icon:'🎯' },
+      { id:'return',    name:'Return Gifts',           type:'perGuest', base: 120,   icon:'🎁' },
+      { id:'invites',   name:'Invitations / E-Invites',type:'fixed',    base: 2000,  icon:'💌' },
+      { id:'security',  name:'Security / Helpers',     type:'fixed',    base: 5000,  icon:'🛡️' },
+    ];
+
+    // Package multipliers
+    const PACKAGES = {
+      simple: { label:'Simple',  mult: 1.00 },
+      classic:{ label:'Classic', mult: 1.20 },
+      luxury: { label:'Luxury',  mult: 1.60 },
+    };
+
+    // Location multipliers
+    const LOCATION_MULT = {
+      tier2: 1.00,
+      metro: 1.12,
+      rural: 0.93,
+      premium: 1.20
+    };
+
+    // Party Type multipliers (small effect)
+    const TYPE_MULT = {
+      birthday:     { label:'Birthday Party',        mult: 1.00 },
+      anniversary:  { label:'Anniversary Party',     mult: 1.05 },
+      houseparty:   { label:'House Party',           mult: 0.95 },
+      kitty:        { label:'Kitty Party',           mult: 0.92 },
+      babyshower:   { label:'Baby Shower',           mult: 1.02 },
+      get_together: { label:'Friends Get-together',  mult: 0.98 },
+    };
+
+    // Theme galleries (replace with your own static images)
+    const GALLERY = {
+      simple: [
+        "{% static 'party_simple1.jpg' %}",
+        "{% static 'party_simple2.jpg' %}",
+        "{% static 'party_simple3.jpg' %}",
+        "{% static 'party_simple4.jpg' %}",
+      ],
+      classic: [
+        "{% static 'party_classic1.jpg' %}",
+        "{% static 'party_classic2.jpg' %}",
+        "{% static 'party_classic3.jpg' %}",
+        "{% static 'party_classic4.jpg' %}",
+      ],
+      luxury: [
+        "{% static 'party_luxury1.jpg' %}",
+        "{% static 'party_luxury2.jpg' %}",
+        "{% static 'party_luxury3.jpg' %}",
+        "{% static 'party_luxury4.jpg' %}",
+      ],
+    };
+
+    // ===============================
+    // 2) "ML Integration" (Frontend)
+    // ===============================
+    const ML_WEIGHTS = {
+      intercept: 0.02,
+      pkg_simple: 0.00,
+      pkg_classic: 0.03,
+      pkg_luxury: 0.08,
+      loc_tier2: 0.00,
+      loc_metro: 0.03,
+      loc_rural: -0.02,
+      loc_premium: 0.05,
+      type_bonus: 0.02,  // scaled with party type (mult - 1)
+      guests: 0.00006,
+      item_bonus: 0.010
+    };
+
+    function mlPredictTotal(baseTotal, pkg, loc, guests, selectedCount, typeMult){
+      let adj = ML_WEIGHTS.intercept;
+
+      // package effect
+      adj += (pkg === 'classic') ? ML_WEIGHTS.pkg_classic :
+             (pkg === 'luxury')  ? ML_WEIGHTS.pkg_luxury  : ML_WEIGHTS.pkg_simple;
+
+      // location effect
+      adj += (loc === 'metro') ? ML_WEIGHTS.loc_metro :
+             (loc === 'rural') ? ML_WEIGHTS.loc_rural :
+             (loc === 'premium') ? ML_WEIGHTS.loc_premium : ML_WEIGHTS.loc_tier2;
+
+      // party type effect (based on type multiplier)
+      adj += (typeMult - 1) * (ML_WEIGHTS.type_bonus * 10);
+
+      // guests effect
+      adj += guests * ML_WEIGHTS.guests;
+
+      // items effect
+      adj += selectedCount * ML_WEIGHTS.item_bonus;
+
+      // clamp
+      adj = Math.max(-0.10, Math.min(adj, 0.25));
+
+      return baseTotal * (1 + adj);
+    }
+
+    // ===============================
+    // 3) UI / STATE
+    // ===============================
+    let selectedPkg = "simple";
+    const selected = new Set(); // item ids
+
+    function formatINR(n){
+      return "₹" + Math.round(n).toLocaleString("en-IN");
+    }
+
+    function renderItems(){
+      const area = document.getElementById("itemsArea");
+      area.innerHTML = "";
+
+      ITEMS.forEach(item=>{
+        const col = document.createElement("div");
+        col.className = "col-md-6";
+
+        const baseLine = (item.type === "perGuest")
+          ? `<div class="muted small">Base: ${formatINR(item.base)} / guest</div>`
+          : `<div class="muted small">Base: ${formatINR(item.base)}</div>`;
+
+        col.innerHTML = `
+          <div class="item-card p-3">
+            <div class="d-flex align-items-start justify-content-between gap-2">
+              <div>
+                <div class="fw-bold">${item.icon} ${item.name}</div>
+                ${baseLine}
+                <div class="muted small">Selected cost: <span class="fw-semibold" id="cost-${item.id}">—</span></div>
+              </div>
+
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="chk-${item.id}"
+                  onchange="toggleItem('${item.id}', this.checked)">
+              </div>
+            </div>
+          </div>
+        `;
+        area.appendChild(col);
+      });
+    }
+
+    function renderGallery(){
+      const area = document.getElementById("galleryArea");
+      area.innerHTML = "";
+      const urls = GALLERY[selectedPkg] || [];
+      urls.forEach((src, idx)=>{
+        const col = document.createElement("div");
+        col.className = "col-6 col-lg-3";
+        col.innerHTML = `<img src="${src}" alt="Theme ${selectedPkg} ${idx+1}">`;
+        area.appendChild(col);
+      });
+    }
+
+    function selectPackage(pkg){
+      selectedPkg = pkg;
+
+      document.querySelectorAll(".pkg-card").forEach(card=>{
+        const active = card.getAttribute("data-pkg") === pkg;
+        card.classList.toggle("active", active);
+        const radio = card.querySelector('input[type="radio"]');
+        if(radio) radio.checked = active;
+      });
+
+      document.getElementById("pkgMultText").textContent = PACKAGES[pkg].mult.toFixed(2) + "x";
+      document.getElementById("galleryLabel").textContent = PACKAGES[pkg].label;
+
+      renderGallery();
+      recalculate();
+    }
+
+    function toggleItem(id, on){
+      if(on) selected.add(id);
+      else selected.delete(id);
+      recalculate();
+    }
+
+    function selectAll(on){
+      ITEMS.forEach(it=>{
+        const chk = document.getElementById("chk-"+it.id);
+        chk.checked = on;
+        if(on) selected.add(it.id);
+        else selected.delete(it.id);
+      });
+      recalculate();
+    }
+
+    function resetAll(){
+      selected.clear();
+      document.getElementById("guests").value = 50;
+      document.getElementById("partyType").value = "birthday";
+      document.getElementById("location").value = "tier2";
+
+      ITEMS.forEach(it=>{
+        document.getElementById("chk-"+it.id).checked = false;
+        document.getElementById("cost-"+it.id).textContent = "—";
+      });
+
+      selectPackage("simple");
+      recalculate();
+    }
+
+    function recalculate(){
+      const guests = Math.max(0, parseInt(document.getElementById("guests").value || "0", 10));
+      const locKey = document.getElementById("location").value;
+      const locMult = LOCATION_MULT[locKey] ?? 1.00;
+      document.getElementById("locMultText").textContent = locMult.toFixed(2) + "x";
+
+      const typeKey = document.getElementById("partyType").value;
+      const typeMult = TYPE_MULT[typeKey]?.mult ?? 1.00;
+      document.getElementById("typeMultText").textContent = typeMult.toFixed(2) + "x";
+
+      const pkgMult = PACKAGES[selectedPkg].mult;
+
+      let baseTotal = 0;
+      const breakdown = [];
+
+      ITEMS.forEach(item=>{
+        const costSpan = document.getElementById("cost-"+item.id);
+
+        if(!selected.has(item.id)){
+          costSpan.textContent = "—";
+          return;
+        }
+
+        let baseCost = 0;
+        if(item.type === "perGuest") baseCost = item.base * guests;
+        else baseCost = item.base;
+
+        const finalCost = baseCost * pkgMult * locMult * typeMult;
+        baseTotal += finalCost;
+
+        costSpan.textContent = formatINR(finalCost);
+        breakdown.push({name:item.name, cost:finalCost});
+      });
+
+      document.getElementById("selCount").textContent = `${selected.size} Selected`;
+
+      const body = document.getElementById("breakdownBody");
+      body.innerHTML = "";
+
+      if(breakdown.length === 0){
+        body.innerHTML = `<tr><td class="muted small" colspan="2">No items selected.</td></tr>`;
+        document.getElementById("totalText").textContent = "₹0";
+        document.getElementById("totalHint").textContent = "Select items to estimate budget";
+        document.getElementById("mlText").textContent = "₹0";
+        return;
+      }
+
+      breakdown.sort((a,b)=>b.cost-a.cost).forEach(row=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="muted small">${row.name}</td>
+          <td class="text-end fw-semibold">${formatINR(row.cost)}</td>
+        `;
+        body.appendChild(tr);
+      });
+
+      const mlTotal = mlPredictTotal(baseTotal, selectedPkg, locKey, guests, selected.size, typeMult);
+
+      document.getElementById("totalText").textContent = formatINR(baseTotal);
+      document.getElementById("totalHint").textContent =
+        `Rule-based = Package(${PACKAGES[selectedPkg].label}) × Type(${TYPE_MULT[typeKey].label}) × Location(${locMult.toFixed(2)}x)`;
+
+      document.getElementById("mlText").textContent = formatINR(mlTotal);
+    }
+
+    function openSummary(){
+      const guests = Math.max(0, parseInt(document.getElementById("guests").value || "0", 10));
+      const locKey = document.getElementById("location").value;
+      const locMult = LOCATION_MULT[locKey] ?? 1.00;
+
+      const typeKey = document.getElementById("partyType").value;
+      const typeLabel = TYPE_MULT[typeKey]?.label ?? typeKey;
+      const typeMult = TYPE_MULT[typeKey]?.mult ?? 1.00;
+
+      const pkgMult = PACKAGES[selectedPkg].mult;
+
+      let baseTotal = 0;
+      const chosen = [];
+
+      ITEMS.forEach(item=>{
+        if(!selected.has(item.id)) return;
+        chosen.push(item.name);
+        let baseCost = (item.type === "perGuest") ? item.base * guests : item.base;
+        baseTotal += (baseCost * pkgMult * locMult * typeMult);
+      });
+
+      const mlTotal = mlPredictTotal(baseTotal, selectedPkg, locKey, guests, selected.size, typeMult);
+
+      document.getElementById("sumPkg").textContent = `${PACKAGES[selectedPkg].label} (${pkgMult.toFixed(2)}x)`;
+      document.getElementById("sumType").textContent = `${typeLabel} (${typeMult.toFixed(2)}x)`;
+      document.getElementById("sumGuests").textContent = guests.toLocaleString("en-IN");
+      document.getElementById("sumLoc").textContent = `${locKey.toUpperCase()} (${locMult.toFixed(2)}x)`;
+      document.getElementById("sumRuleTotal").textContent = formatINR(baseTotal);
+      document.getElementById("sumMlTotal").textContent = formatINR(mlTotal);
+
+      const ul = document.getElementById("sumItems");
+      ul.innerHTML = "";
+      if(chosen.length === 0){
+        ul.innerHTML = `<li class="muted">No services selected.</li>`;
+      } else {
+        chosen.forEach(x=>{
+          const li = document.createElement("li");
+          li.textContent = x;
+          ul.appendChild(li);
+        });
+      }
+
+      const modal = new bootstrap.Modal(document.getElementById("sumModal"));
+      modal.show();
+    }
+
+    // Init
+    renderItems();
+    renderGallery();
+    recalculate();
+  </script>
+</body>
+</html>

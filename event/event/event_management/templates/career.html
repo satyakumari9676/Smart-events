@@ -1,0 +1,614 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Careers | Event Worker Hiring</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    body { background:#f6f8fb; }
+    .hero {
+      background: linear-gradient(135deg, #0d6efd, #20c997);
+      border-radius: 18px;
+      color: #fff;
+    }
+    .card { border:0; border-radius:18px; }
+    .shadow-soft { box-shadow: 0 12px 30px rgba(16,24,40,0.10); }
+    .muted { color:#667085; }
+    .badge-soft {
+      background: rgba(13,110,253,0.10);
+      color:#0d6efd;
+      border: 1px solid rgba(13,110,253,0.15);
+    }
+    .job-card { transition: .2s ease; }
+    .job-card:hover { transform: translateY(-3px); }
+    .role-grid { display:none; }
+    .role-grid.active { display:block; }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  {% include 'navbar.html' %}
+
+  <!-- spacing for fixed navbar -->
+  <div style="height:70px;"></div>
+
+  <div class="container py-4 py-lg-5">
+
+    <!-- Hero -->
+    <div class="hero p-4 p-lg-5 shadow-soft mb-4">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <span class="badge badge-soft rounded-pill px-3 py-2 mb-2">
+            <i class="bi bi-briefcase me-1"></i> Hiring Portal
+          </span>
+          <h1 class="mb-2">Join Our Event Workforce</h1>
+          <p class="mb-0 opacity-75">
+            Apply for event roles based on your skills. We hire for Weddings, Birthday/Private Parties,
+            Corporate Events, and Exhibitions.
+          </p>
+        </div>
+        <div class="col-lg-5 text-lg-end">
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Left: Roles by Events -->
+      <div class="col-lg-6">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h4 class="mb-0">Roles by Event Category</h4>
+          <span class="text-secondary small">Updated weekly</span>
+        </div>
+        <p class="muted mb-3">Select an event category to view relevant roles.</p>
+
+        <!-- Event Category Tabs -->
+        <div class="d-flex gap-2 flex-wrap mb-3">
+          <button class="btn btn-sm btn-primary" type="button" onclick="showRoleGrid('wedding', this)">Wedding</button>
+          <button class="btn btn-sm btn-outline-primary" type="button" onclick="showRoleGrid('party', this)">Birthday / Private Party</button>
+          <button class="btn btn-sm btn-outline-primary" type="button" onclick="showRoleGrid('corporate', this)">Corporate</button>
+          <button class="btn btn-sm btn-outline-primary" type="button" onclick="showRoleGrid('exhibition', this)">Exhibition / Stage</button>
+        </div>
+
+        <!-- WEDDING ROLES -->
+        <div id="grid-wedding" class="role-grid active">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Wedding</span>
+                    <i class="bi bi-flower1 fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Wedding Planner Assistant</h6>
+                  <p class="muted small mb-3">Schedules, vendor coordination, guest handling.</p>
+                  <ul class="small mb-0">
+                    <li>Communication skills</li>
+                    <li>On-site work</li>
+                    <li>Shift-based</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Wedding</span>
+                    <i class="bi bi-camera fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Wedding Photographer / Videographer</h6>
+                  <p class="muted small mb-3">Coverage, reels, album & highlight edits.</p>
+                  <ul class="small mb-0">
+                    <li>Portfolio required</li>
+                    <li>Own camera preferred</li>
+                    <li>Hybrid work</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Wedding</span>
+                    <i class="bi bi-brush fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Mehendi Artist</h6>
+                  <p class="muted small mb-3">Bridal & guest mehendi, designs, hygiene.</p>
+                  <ul class="small mb-0">
+                    <li>Experience preferred</li>
+                    <li>Fast & clean work</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Wedding</span>
+                    <i class="bi bi-stars fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Stage & Floral Decor Crew</h6>
+                  <p class="muted small mb-3">Stage setup, flowers, entry arch, backdrop.</p>
+                  <ul class="small mb-0">
+                    <li>Physical work</li>
+                    <li>Team coordination</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PARTY ROLES -->
+        <div id="grid-party" class="role-grid">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Party</span>
+                    <i class="bi bi-balloon fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Balloon Decor Artist</h6>
+                  <p class="muted small mb-3">Balloon arch, backdrop, theme decor.</p>
+                  <ul class="small mb-0">
+                    <li>Creative skills</li>
+                    <li>Fast setup</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Party</span>
+                    <i class="bi bi-emoji-laughing fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Anchor / MC</h6>
+                  <p class="muted small mb-3">Host games, announcements, crowd engagement.</p>
+                  <ul class="small mb-0">
+                    <li>Speaking skills</li>
+                    <li>Stage confidence</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Party</span>
+                    <i class="bi bi-music-note-beamed fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">DJ / Music Operator</h6>
+                  <p class="muted small mb-3">Playlist, speakers, mic support, vibes.</p>
+                  <ul class="small mb-0">
+                    <li>Basic mixing</li>
+                    <li>Equipment handling</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Party</span>
+                    <i class="bi bi-cupcake fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Cake & Dessert Table Assistant</h6>
+                  <p class="muted small mb-3">Setup, serving, hygiene & cleanup.</p>
+                  <ul class="small mb-0">
+                    <li>Cleanliness</li>
+                    <li>Customer friendly</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CORPORATE ROLES -->
+        <div id="grid-corporate" class="role-grid">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Corporate</span>
+                    <i class="bi bi-mic fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Corporate Event Host</h6>
+                  <p class="muted small mb-3">Agenda, stage announcements, professionalism.</p>
+                  <ul class="small mb-0">
+                    <li>Formal communication</li>
+                    <li>Time management</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Corporate</span>
+                    <i class="bi bi-projector fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">AV Technician (Projector/Audio)</h6>
+                  <p class="muted small mb-3">Projectors, mic checks, presentations, speakers.</p>
+                  <ul class="small mb-0">
+                    <li>Experience preferred</li>
+                    <li>Tech support</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Corporate</span>
+                    <i class="bi bi-person-badge fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Registration Desk Staff</h6>
+                  <p class="muted small mb-3">Entry, ID badges, attendee list, support.</p>
+                  <ul class="small mb-0">
+                    <li>Basic computer</li>
+                    <li>Polite communication</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Corporate</span>
+                    <i class="bi bi-cup-hot fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Corporate Catering Staff</h6>
+                  <p class="muted small mb-3">Service, buffet management, hygiene.</p>
+                  <ul class="small mb-0">
+                    <li>Uniform required</li>
+                    <li>Teamwork</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXHIBITION / STAGE ROLES -->
+        <div id="grid-exhibition" class="role-grid">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Exhibition</span>
+                    <i class="bi bi-hammer fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Stage Setup / Production Crew</h6>
+                  <p class="muted small mb-3">Truss, stage, booths, seating arrangement.</p>
+                  <ul class="small mb-0">
+                    <li>Physical work</li>
+                    <li>Safety awareness</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Exhibition</span>
+                    <i class="bi bi-speaker fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Sound & Light Technician</h6>
+                  <p class="muted small mb-3">Audio setup, mic handling, lighting checks.</p>
+                  <ul class="small mb-0">
+                    <li>Experience preferred</li>
+                    <li>Night shifts possible</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Exhibition</span>
+                    <i class="bi bi-shield-check fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Security Staff</h6>
+                  <p class="muted small mb-3">Crowd control, entry checks, safety.</p>
+                  <ul class="small mb-0">
+                    <li>Discipline</li>
+                    <li>Alertness</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card shadow-soft job-card h-100">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge badge-soft rounded-pill">Exhibition</span>
+                    <i class="bi bi-megaphone fs-5 text-primary"></i>
+                  </div>
+                  <h6 class="mb-1">Promoter / Sales Support</h6>
+                  <p class="muted small mb-3">Booth support, guiding visitors, basic sales.</p>
+                  <ul class="small mb-0">
+                    <li>Good communication</li>
+                    <li>Standing work</li>
+                    <li>On-site</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+
+      <!-- Right: Application Form -->
+      <div class="col-lg-6">
+
+        <div class="card shadow-soft">
+          <div class="card-body p-4">
+            <h5 class="mb-3">Worker Application Form</h5>
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show small" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+            <form method="POST" action="{% url 'career' %}" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label class="form-label small fw-semibold">Full Name</label>
+                <input type="text" name="fullName" class="form-control" required placeholder="Enter Name">
+              </div>
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold">Email</label>
+                  <input type="email" name="email" class="form-control" required placeholder="Enter Mail">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold">Phone</label>
+                  <input type="text" name="phone" class="form-control" required placeholder="Enter Phone Number">
+                </div>
+              </div>
+              
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold">Event Category</label>
+                  <select name="eventCategory" id="eventCategory" class="form-select" onchange="populateRoles(this.value)" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="wedding">Wedding</option>
+                    <option value="party">Party / Birthday</option>
+                    <option value="corporate">Corporate</option>
+                    <option value="exhibition">Exhibition / Stage</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold">Role</label>
+                  <select name="role" id="role" class="form-select" required>
+                    <option value="" disabled selected>Select Role</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold">Experience</label>
+                  <select name="experience" class="form-select" required>
+                    <option value="Fresher">Fresher</option>
+                    <option value="1-2 Years">1-2 Years</option>
+                    <option value="3-5 Years">3-5 Years</option>
+                    <option value="5+ Years">5+ Years</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold">City</label>
+                  <input type="text" name="city" class="form-control" required placeholder="Your City">
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label small fw-semibold">Additional Skills / Message</label>
+                <textarea name="message" class="form-control" rows="3" placeholder="Tell us more about your skills or past work..."></textarea>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label small fw-semibold">Resume / CV (Optional)</label>
+                <input type="file" name="resume" class="form-control" accept=".pdf,.doc,.docx">
+              </div>
+              
+              <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                Submit Application
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="card shadow-soft mt-4">
+          <div class="card-body p-4">
+            <h5 class="mb-3">FAQs</h5>
+            <div class="accordion" id="faq">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#q1">
+                    How will I get event assignments?
+                  </button>
+                </h2>
+                <div id="q1" class="accordion-collapse collapse show" data-bs-parent="#faq">
+                  <div class="accordion-body muted">
+                    After verification, you will be notified when events match your role and availability.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q2">
+                    Is experience mandatory?
+                  </button>
+                </h2>
+                <div id="q2" class="accordion-collapse collapse" data-bs-parent="#faq">
+                  <div class="accordion-body muted">
+                    Not always. For helper roles freshers can apply. For technical roles, experience is preferred.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q3">
+                    Do I need to upload a resume?
+                  </button>
+                </h2>
+                <div id="q3" class="accordion-collapse collapse" data-bs-parent="#faq">
+                  <div class="accordion-body muted">
+                    Resume is optional. You can also mention your skills in the form.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Standard Footer -->
+  <footer class="py-4 bg-dark text-white text-center mt-5 w-100">
+      <div class="container">
+          <p class="mb-0 small">
+              © <span id="year"></span> Event Management Platform • Careers
+          </p>
+      </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // ===== Role list based on Event Category =====
+    const ROLES_BY_EVENT = {
+      wedding: [
+        "Wedding Planner Assistant",
+        "Bride/Groom Entry Coordinator",
+        "Mehendi Artist",
+        "Makeup Artist Assistant",
+        "Stage & Floral Decor Crew",
+        "Wedding Photographer / Videographer",
+        "Catering Staff (Wedding)",
+        "Security Staff (Wedding)"
+      ],
+      party: [
+        "Balloon Decor Artist",
+        "Theme Setup Assistant",
+        "Anchor / MC",
+        "DJ / Music Operator",
+        "Cake & Dessert Table Assistant",
+        "Party Photographer",
+        "Catering / Serving Staff",
+        "Return Gifts Packing Staff"
+      ],
+      corporate: [
+        "Registration Desk Staff",
+        "Corporate Event Host",
+        "AV Technician (Projector/Audio)",
+        "Conference Hall Coordinator",
+        "Corporate Catering Staff",
+        "Usher / Guest Relations",
+        "Security Staff (Corporate)"
+      ],
+      exhibition: [
+        "Stage Setup / Production Crew",
+        "Sound & Light Technician",
+        "Booth Setup Worker",
+        "Promoter / Sales Support",
+        "Crowd Management Staff",
+        "Security Staff (Exhibition)"
+      ]
+    };
+
+    const eventCategory = document.getElementById("eventCategory");
+    const roleSelect = document.getElementById("role");
+
+    function populateRoles(category){
+      if (!roleSelect) return;
+      roleSelect.innerHTML = '<option value="" disabled selected>Select Role</option>';
+      if (ROLES_BY_EVENT[category]) {
+        ROLES_BY_EVENT[category].forEach(role => {
+          const opt = document.createElement("option");
+          opt.value = role;
+          opt.textContent = role;
+          roleSelect.appendChild(opt);
+        });
+      }
+    }
+
+    // ===== Left grid toggle =====
+    function showRoleGrid(key, btn){
+      document.querySelectorAll(".role-grid").forEach(g => g.classList.remove("active"));
+      document.getElementById("grid-"+key).classList.add("active");
+
+      // button styles
+      const parent = btn.parentElement;
+      parent.querySelectorAll("button").forEach(b=>{
+        b.classList.remove("btn-primary");
+        b.classList.add("btn-outline-primary");
+      });
+      btn.classList.remove("btn-outline-primary");
+      btn.classList.add("btn-primary");
+    }
+
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

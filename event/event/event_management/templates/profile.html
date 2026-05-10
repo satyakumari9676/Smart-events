@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile | Event Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        body { background-color: #f6f8fb; }
+        .hero {
+            background: linear-gradient(135deg, #0d6efd, #20c997);
+            border-radius: 18px;
+            color: #fff;
+        }
+        .card-soft {
+            border-radius: 18px;
+            border: 0;
+            box-shadow: 0 12px 30px rgba(16,24,40,0.10);
+        }
+        .profile-img-preview {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+
+<body>
+<!-- Navbar -->
+{% include 'navbar.html' %}
+
+<div class="container py-4 py-lg-5">
+    <!-- Hero -->
+    <div class="hero p-4 p-lg-5 shadow-soft mb-4">
+        <h1 class="mb-2">My Profile</h1>
+        <p class="mb-0 opacity-75">Update your personal details, profile picture, and security settings.</p>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row g-4">
+        <!-- Edit Profile Section -->
+        <div class="col-lg-6">
+            <div class="card card-soft h-100">
+                <div class="card-body p-4 p-lg-5">
+                    <h4 class="fw-bold mb-4">Edit Details</h4>
+                    <form method="POST" action="{% url 'profile' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="text-center mb-4">
+                            {% if request.user.profile.profile_image %}
+                                <img src="{{ request.user.profile.profile_image.url }}" alt="Profile" class="profile-img-preview mb-3">
+                            {% else %}
+                                <div class="profile-img-preview bg-light text-secondary d-inline-flex justify-content-center align-items-center mb-3">
+                                    <i class="bi bi-person fs-1"></i>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <label for="profile_image" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                    <i class="bi bi-camera me-1"></i> Change Avatar
+                                </label>
+                                <input type="file" id="profile_image" name="profile_image" class="d-none" accept="image/*" onchange="previewImage(this)">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-muted">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="bi bi-person"></i></span>
+                                <input type="text" class="form-control bg-light border-0" name="username" value="{{ request.user.username }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-muted">Email (Read Only)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control bg-light border-0" value="{{ request.user.email }}" readonly>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-semibold shadow-sm">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change Password Section -->
+        <div class="col-lg-6">
+            <div class="card card-soft h-100">
+                <div class="card-body p-4 p-lg-5">
+                    <h4 class="fw-bold mb-4">Security</h4>
+                    <form method="POST" action="{% url 'change_password' %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-muted">Current Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="bi bi-key"></i></span>
+                                <input type="password" class="form-control bg-light border-0" name="current_password" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-muted">New Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="bi bi-shield-lock"></i></span>
+                                <input type="password" class="form-control bg-light border-0" name="new_password" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-muted">Confirm New Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="bi bi-shield-check"></i></span>
+                                <input type="password" class="form-control bg-light border-0" name="confirm_password" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-warning text-dark w-100 rounded-pill py-2 fw-bold shadow-sm">Update Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var img = document.querySelector('.profile-img-preview');
+            if (img.tagName === 'IMG') {
+                img.src = e.target.result;
+            } else {
+                img.outerHTML = '<img src="' + e.target.result + '" alt="Profile" class="profile-img-preview mb-3">';
+            }
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
