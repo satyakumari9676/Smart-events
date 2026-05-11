@@ -1,6 +1,7 @@
-django
+Django
 scikit-learn
 pandas
 numpy
 qrcode
-pillow
+Pillow
+gunicorn
